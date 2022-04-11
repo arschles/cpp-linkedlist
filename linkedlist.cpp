@@ -4,6 +4,15 @@
 
 using namespace std;
 
+// This file contains a simple code sample that shows my 
+// object-oriented programming skills in C++.
+//
+// Since I have not written any C++, C#, Java, or C code
+// that I am allowed to share, I have written a simple 
+// class that implements a linked list data structure
+// and several public methods that do common operations
+// on it.
+
 template <class T>
 struct Node {
     public:
@@ -24,7 +33,7 @@ class LinkedList {
             size = 0;
         }
         ~LinkedList() {
-            Node<T> *cur = head;
+            auto cur = head;
             while (cur != NULL) {
                 auto next = cur->next;
                 delete cur;
