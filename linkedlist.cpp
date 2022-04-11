@@ -126,6 +126,7 @@ int main() {
         // have a value
         assert(!l.get(i+1).has_value());
     }
+    assert(l.len() == num_pushes);
     
     // next pop all the elements, checking size 
     // after each pop
@@ -135,6 +136,8 @@ int main() {
         assert(popped.value() == i);
         assert(l.len() == num_pushes - i - 1);
     }
+
+    assert(l.len() == 0);
 
     cout << "All tests passed" << endl;
     return 0;
