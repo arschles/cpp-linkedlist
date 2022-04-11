@@ -3,5 +3,5 @@ build:
 	g++ -o ./bin/lists.out -std=c++17 linkedlist.cpp
 
 .PHONY: run
-run:
+run: build
 	./bin/lists.out

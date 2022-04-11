@@ -1,5 +1,6 @@
 #include <iostream>
 #include <optional>
+#include <assert.h>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ class LinkedList {
     private:
         Node<T> *head;
         Node<T> *tail;
-        int size;
+        size_t size;
     public:
         LinkedList() {
             head = NULL;
@@ -31,8 +32,13 @@ class LinkedList {
             }
         }
 
-        // push adds val to the end of the list
-        void push(T val) {
+        // len returns the current length of the list
+        size_t len() {
+            return this->size;
+        }
+
+        // append adds val to the end of the list
+        void append(T val) {
             auto node = new Node<T>;
             node->val = val;
             node->next = NULL;
@@ -47,23 +53,80 @@ class LinkedList {
             this->size++;
         }
 
-        // get returns the node at index idx,
-        // or none if no such node exists
-        std::optional<T> get(size_t idx) {
-            auto cur = this.head;
-            for(size_t i = 0; i <= idx; i++) {
-                if(cur == NULL) {
-                    return nullopt;
-                }
-                cur = cur->next;
-            }
-            if(cur == NULL) {
+        // pop removes the first element of the list
+        // or returns nullopt if the list is empty
+        optional<T> pop() {
+            // if there's no head, return nothing
+            if (this->head == NULL) {
                 return nullopt;
             }
-            return optional<T>{cur->val};
+
+            auto curHead = this->head;
+            auto newHead = this->head->next;
+            if (newHead == NULL) {
+                // if the new head is null,
+                // set everything to null and 0
+                this->head = NULL;
+                this->tail = NULL;
+                this->size = 0;
+            } else {
+                // otherwise, there is a new head
+                // so set the official head to 
+                // the new head and decrement the size
+                this->head = newHead;
+                this->size--;
+            }
+            auto ret = curHead->val;
+            delete curHead;
+            return ret;
+        }
+
+        // get returns the node at index idx, or none if 
+        // no such node exists
+        optional<T> get(size_t idx) {
+            auto cur = this->head;
+            size_t i = 0;
+            while(NULL != cur) {
+                if (i == idx) {
+                    return optional<T>(cur->val);
+                }
+                cur = cur->next;
+                i++;
+            }
+            return nullopt;
         }
 };
 
 int main() {
+    // basic invariant checks
+    LinkedList<int> l;
+    assert(l.len() == 0);
+    assert(l.get(0) == nullopt);
+    assert(l.get(123) == nullopt);
+    
+    // append a bunch of elements, checking size and
+    // the get function after each push.
+    const size_t num_pushes = 200;
+    for (size_t i = 0; i < num_pushes; i++) {
+        l.append(i);
+        assert(l.len() == i + 1);
+        auto gotten = l.get(i);
+        assert(gotten.has_value());
+        assert(gotten.value() == i);
+        // one index off the end should not
+        // have a value
+        assert(!l.get(i+1).has_value());
+    }
+    
+    // next pop all the elements, checking size 
+    // after each pop
+    for (size_t i = 0; i < num_pushes; i++) {
+        auto popped = l.pop();
+        assert(popped.has_value());
+        assert(popped.value() == i);
+        assert(l.len() == num_pushes - i - 1);
+    }
+
+    cout << "All tests passed" << endl;
     return 0;
 }
