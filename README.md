@@ -1,3 +1,3 @@
-# Syracuse University Code Sample - C++
+# C++ Programming Exercises
 
-This repository contains a simple code sample that shows my object-oriented programming skills in C++. I used it in my application to Syracuse University's MS in Computer Science program for the Fall 2022 term.
+This repository contains C++ code to implement several data structures and associated functionality.

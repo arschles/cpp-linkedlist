@@ -1,17 +1,19 @@
-#include <iostream>
+#ifndef LL
+#define LL
+
 #include <optional>
-#include <assert.h>
+#include <functional>
 
 using namespace std;
 
 // This file contains a simple code sample that shows my 
 // object-oriented programming skills in C++.
 //
-// Since I have not written any C++, C#, Java, or C code
-// that I am allowed to share, I have written a simple 
-// class that implements a linked list data structure
-// and several public methods that do common operations
-// on it.
+// Since I have not written any accessible C++, C#, Java, or 
+// C code that I am allowed to share, I have written a 
+// simple class that implements a linked list data structure
+// along with several public methods that do common 
+// operations on it.
 
 template <class T>
 struct Node {
@@ -104,41 +106,46 @@ class LinkedList {
             }
             return nullopt;
         }
+
+        // reverse reverses this linked list
+        void reverse() {
+            // if the list has 0 or 1 elements, do nothing
+            if (this->size < 2) {
+                return;
+            }
+            // otherwise, visit every node in the list and
+            // reverse the next pointer of each. for each 
+            // node visited, we'll need to keep track of the
+            // previous node so that we can set the
+            // current node's next pointer to the previous
+            auto old_head = this->head;
+            auto cur = this->head;
+            Node<T> * prev = NULL;
+            while (cur != NULL) {
+                auto old_next = cur->next;
+                cur->next = prev;
+                prev = cur;
+                cur = old_next;
+            }
+            // after we finish visiting all nodes,
+            // the prev pointer will be pointing to the 
+            // new head of the list.
+            this->head = prev;
+            this->tail = old_head;
+        }
+
+        template <class U>
+        U reduce(U init, function<U(U, size_t, T)> fn) {
+            U accum = init;
+            auto cur = this->head;
+            size_t idx = 0;
+            while (cur != NULL) {
+                accum = fn(accum, idx, cur->val);
+                cur = cur->next;
+                idx++;
+            }
+            return accum;
+        }
 };
 
-int main() {
-    // basic invariant checks
-    LinkedList<int> l;
-    assert(l.len() == 0);
-    assert(l.get(0) == nullopt);
-    assert(l.get(123) == nullopt);
-    
-    // append a bunch of elements, checking size and
-    // the get function after each push.
-    const size_t num_pushes = 200;
-    for (size_t i = 0; i < num_pushes; i++) {
-        l.append(i);
-        assert(l.len() == i + 1);
-        auto gotten = l.get(i);
-        assert(gotten.has_value());
-        assert(gotten.value() == i);
-        // one index off the end should not
-        // have a value
-        assert(!l.get(i+1).has_value());
-    }
-    assert(l.len() == num_pushes);
-    
-    // next pop all the elements, checking size 
-    // after each pop
-    for (size_t i = 0; i < num_pushes; i++) {
-        auto popped = l.pop();
-        assert(popped.has_value());
-        assert(popped.value() == i);
-        assert(l.len() == num_pushes - i - 1);
-    }
-
-    assert(l.len() == 0);
-
-    cout << "All tests passed" << endl;
-    return 0;
-}
+#endif

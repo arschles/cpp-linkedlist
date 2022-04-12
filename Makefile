@@ -1,7 +1,7 @@
-.PHONY: build
-build:
-	g++ -o ./bin/lists.out -std=c++17 linkedlist.cpp
+.PHONY: build-ll
+build-ll:
+	g++ -o ./bin/ll.out -std=c++17 linkedlist/*.cc
 
-.PHONY: run
-run: build
-	./bin/lists.out
+.PHONY: run-ll
+run-ll: build-ll
+	./bin/ll.out
