@@ -3,17 +3,17 @@
 #include <optional>
 #include <functional>
 
-template <class T>
+template <typename T>
 struct Node {
     public:
         T val;
         Node<T>* next;
 };
 
-template <class T, class U>
+template <typename T, typename U>
 using reduce_fn_t = std::function<U(U, size_t, T)>;
 
-template <class T>
+template <typename T>
 class LinkedList {
     private:
         Node<T> *head;
@@ -127,7 +127,7 @@ class LinkedList {
             this->tail = old_head;
         }
         
-        template <class U>
+        template <typename U>
         U reduce(U init, reduce_fn_t<T, U> fn) {
             U accum = init;
             auto cur = this->head;
