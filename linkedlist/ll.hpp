@@ -40,7 +40,7 @@ class LinkedList {
         }
         
         // len returns the current length of the list
-        size_t len() {
+        size_t len() const {
             return this->size;
         };
         
@@ -62,7 +62,7 @@ class LinkedList {
 
         // first returns the first element in the list
         // if there is one, or nullopt otherwise
-        std::optional<T> first() {
+        std::optional<T> first() const {
             if (this->head == NULL) {
                 return std::nullopt;
             }
@@ -71,7 +71,7 @@ class LinkedList {
 
         // last returns the last element in the list
         // if there is one, or nullopt otherwise
-        std::optional<T> last() {
+        std::optional<T> last() const {
             if (this->tail == NULL) {
                 return std::nullopt;
             }
@@ -79,7 +79,7 @@ class LinkedList {
         }
         
         template <typename U>
-        std::shared_ptr<LinkedList<U>> map(map_fn_t<T, U> fn) {
+        std::shared_ptr<LinkedList<U>> map(map_fn_t<T, U> fn) const {
             auto new_list = std::make_shared<LinkedList<U>>();
             auto cur = this->head;
             size_t i = 0;
@@ -121,7 +121,7 @@ class LinkedList {
         
         // get returns the node at index idx, or nullopt if 
         // no such node exists
-        std::optional<T> get(size_t idx) {
+        std::optional<T> get(size_t idx) const {
             auto cur = this->head;
             size_t i = 0;
             while(NULL != cur) {
@@ -164,7 +164,7 @@ class LinkedList {
         // find returns the first element whose value 
         // satisfies fn(index, value), or none if no
         // such element exists.
-        std::optional<T> find(find_fn_t<T> fn) {
+        std::optional<T> find(find_fn_t<T> fn) const {
             auto cur = this->head;
             size_t idx = 0;
             while (cur != NULL) {
