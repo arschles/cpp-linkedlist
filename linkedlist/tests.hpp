@@ -10,3 +10,4 @@ testcase_ret test_basic(string name);
 testcase_ret test_basic_size_and_get(string name);
 testcase_ret test_pop(string name);
 testcase_ret test_reverse(string name);
+testcase_ret test_find(string name);

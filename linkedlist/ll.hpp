@@ -14,6 +14,9 @@ template <typename T, typename U>
 using reduce_fn_t = std::function<U(U, size_t, T)>;
 
 template <typename T>
+using find_fn_t = std::function<bool(size_t, T)>;
+
+template <typename T>
 class LinkedList {
     private:
         Node<T> *head;
@@ -127,6 +130,14 @@ class LinkedList {
             this->tail = old_head;
         }
         
+        // reduce applies fn to each element in the list,
+        // accumulating a value as it visits each element,
+        // and returns the final value.
+        //
+        // this function starts with init, so the accumulated
+        // value passed to the very first element in the list
+        // will be init. subsequent accumulated values will
+        // be the return value of the previous call to fn.
         template <typename U>
         U reduce(U init, reduce_fn_t<T, U> fn) {
             U accum = init;
@@ -138,5 +149,21 @@ class LinkedList {
                 idx++;
             }
             return accum;
+        }
+
+        // find returns the first element whose value 
+        // satisfies fn(index, value), or none if no
+        // such element exists.
+        optional<T> find(find_fn_t<T> fn) {
+            auto cur = this->head;
+            size_t idx = 0;
+            while (cur != NULL) {
+                if (fn(idx, cur->val)) {
+                    return optional<T>(cur->val);
+                }
+                cur = cur->next;
+                idx++;
+            }
+            return nullopt;
         }
 };

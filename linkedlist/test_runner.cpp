@@ -9,9 +9,9 @@ void run_testcase(testcase_fn fn, string name) {
     auto passed = get<0>(ret);
     auto msg = get<1>(ret);
     if(passed) {
-        cout << "PASSED: test case " << endl;
+        cout << "PASSED [" << name << "]" << endl;
     } else {
-        cout << "FAILED: test case " << name << " (" << msg << ")" << endl;
+        cout << "FAILED [" << name << "]: " << msg << endl;
         exit(EXIT_FAILURE);
     }
 }

@@ -23,6 +23,11 @@ int main() {
         test_reverse,
         "reverse"
     );
+
+    run_testcase(
+        test_find,
+        "find"
+    );
     
     cout << "All tests passed" << endl;
     return 0;
