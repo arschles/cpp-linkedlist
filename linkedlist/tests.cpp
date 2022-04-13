@@ -71,17 +71,9 @@ testcase_ret test_pop(string name) {
     auto ll = create_ll(num_elts);
     for (size_t i = 0; i < num_elts; i++) {
         auto popped = ll->pop();
-        if(!popped.has_value()) {
-            auto f = failer(
-                "pop() should return a value for index "
-            );
-            f << i;
-            return f();
-        }
-        if(popped.value() != i) {
-            auto f = failer("value of index ");
-            f << i << " should be " << i;
-            f << " (it was " << popped.value() << ")";
+        if(!check_option(popped, int(i))) {
+            auto f = failer("pop() should return ");
+            f << i << " for index " << i;
             return f();
         }
         if(ll->len() != (num_elts-1-i)) {
@@ -129,7 +121,7 @@ testcase_ret test_find(string name) {
             return elt == i;
         };
         auto find_res = ll->find(finder);
-        if(!find_res.has_value()) {
+        if(!check_option(find_res, int(i))) {
             auto f = failer("find() should return a value for index ");
             f << i;
             return f();
@@ -151,16 +143,11 @@ testcase_ret test_map(string name) {
     // iterate to check each element
     for(size_t i = 0; i < num_elts; i++) {
         auto elt = mapped_ll->get(i);
-        if(!elt.has_value()) {
-            auto f = failer("get() should return a value for index ");
-            f << i;
-            return f();
-        }
         auto expected_val = to_string(i);
-        if(elt.value() != expected_val) {
-            auto f = failer("value of index ");
-            f << i << " should be " << expected_val;
-            f << " (it was " << elt.value() << ")";
+        if(!check_option(elt, to_string(i))) {
+            auto f = failer("");
+            f << "get() should return " << to_string(i);
+            f << " for index " << i;
             return f();
         }
     }
