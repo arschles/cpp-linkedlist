@@ -113,8 +113,8 @@ testcase_ret test_reverse(string name) {
     // iterate from beginning to end and check indices
     reduce_fn_t<int, bool> checker = [](bool accum, size_t idx, int elt) {
         // the value of element at idx should be the mirror
-        // of idx
-        auto expected_val = num_pushes-idx;
+        // of idx after the reversing action
+        auto expected_val = num_pushes-idx-1;
         auto cur_matches = elt==expected_val;
         return cur_matches && accum;
     };
