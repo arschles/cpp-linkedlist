@@ -1,19 +1,7 @@
-#ifndef LL
-#define LL
+#pragma once
 
 #include <optional>
 #include <functional>
-
-using namespace std;
-
-// This file contains a simple code sample that shows my 
-// object-oriented programming skills in C++.
-//
-// Since I have not written any accessible C++, C#, Java, or 
-// C code that I am allowed to share, I have written a 
-// simple class that implements a linked list data structure
-// along with several public methods that do common 
-// operations on it.
 
 template <class T>
 struct Node {
@@ -22,32 +10,37 @@ struct Node {
         Node<T>* next;
 };
 
+template <class T, class U>
+using reduce_fn_t = std::function<U(U, size_t, T)>;
+
 template <class T>
 class LinkedList {
     private:
         Node<T> *head;
         Node<T> *tail;
         size_t size;
+    
     public:
         LinkedList() {
-            head = NULL;
-            tail = NULL;
-            size = 0;
+            this->head = NULL;
+            this->tail = NULL;
+            this->size = 0;
         }
+        
         ~LinkedList() {
-            auto cur = head;
+            auto cur = this->head;
             while (cur != NULL) {
                 auto next = cur->next;
                 delete cur;
                 cur = next;
             }
         }
-
+        
         // len returns the current length of the list
         size_t len() {
             return this->size;
-        }
-
+        };
+        
         // append adds val to the end of the list
         void append(T val) {
             auto node = new Node<T>;
@@ -63,10 +56,10 @@ class LinkedList {
             }
             this->size++;
         }
-
+        
         // pop removes the first element of the list
         // or returns nullopt if the list is empty
-        optional<T> pop() {
+        std::optional<T> pop() {
             // if there's no head, return nothing
             if (this->head == NULL) {
                 return nullopt;
@@ -91,10 +84,10 @@ class LinkedList {
             delete curHead;
             return ret;
         }
-
+        
         // get returns the node at index idx, or none if 
         // no such node exists
-        optional<T> get(size_t idx) {
+        std::optional<T> get(size_t idx) {
             auto cur = this->head;
             size_t i = 0;
             while(NULL != cur) {
@@ -106,7 +99,7 @@ class LinkedList {
             }
             return nullopt;
         }
-
+        
         // reverse reverses this linked list
         void reverse() {
             // if the list has 0 or 1 elements, do nothing
@@ -133,9 +126,9 @@ class LinkedList {
             this->head = prev;
             this->tail = old_head;
         }
-
+        
         template <class U>
-        U reduce(U init, function<U(U, size_t, T)> fn) {
+        U reduce(U init, reduce_fn_t<T, U> fn) {
             U accum = init;
             auto cur = this->head;
             size_t idx = 0;
@@ -147,5 +140,3 @@ class LinkedList {
             return accum;
         }
 };
-
-#endif

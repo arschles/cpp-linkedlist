@@ -1,47 +1,19 @@
+#ifndef TESTS
+#define TESTS 1
+
 #include <tuple>
 #include <string>
 #include <functional>
 #include <memory>
-#include <sstream>
 #include <iostream>
-#include "ll.cc"
 #include <stdlib.h>
+#include <optional>
 
 using namespace std;
 
-typedef tuple<bool, string> testcase_ret;
-typedef function<testcase_ret(string)> testcase_fn;
-
-testcase_ret fail(string reason) {
-    return tuple<bool, string>(false, reason);
-}
-
-class failer {
-    private:
-        ostringstream out;
-    public:
-        failer(string reason) {
-            this->out << reason;
-        }
-
-        template <class T>
-        failer& operator<<(T val) {
-            this->out << val;
-            return *this;
-        }
-
-        testcase_ret operator()() {
-            return fail(this->out.str());
-        }
-};
-
-testcase_ret pass(string reason) {
-    return tuple<bool, string>(true, reason);
-}
-
-testcase_ret pass() {
-    return pass("");
-}
+#include "ll.hpp"
+#include "test_types.hpp"
+#include "test_runner.hpp"
 
 // create_ll creates a new linked list with num_nodes
 // nodes in it. the value of each node will correspond
@@ -56,20 +28,6 @@ std::shared_ptr<LinkedList<int>> create_ll(size_t num_nodes) {
     std::shared_ptr<LinkedList<int>> ret(ll);
     return ret;
 }
-
-
-void run_testcase(testcase_fn fn, string name) {
-    auto ret = fn(name);
-    auto passed = get<0>(ret);
-    auto msg = get<1>(ret);
-    if(passed) {
-        cout << "PASSED: test case " << endl;
-    } else {
-        cout << "FAILED: test case " << name << " (" << msg << ")" << endl;
-        exit(EXIT_FAILURE);
-    }
-}
-
 
 testcase_ret test_basic(string name) {
     LinkedList<int> l; 
@@ -100,11 +58,11 @@ testcase_ret test_basic_size_and_get(string name) {
     if(ll->get(ll->len()+1).has_value()) {
         return fail("get(len()+1) should return nullopt");
     }
-    function<bool(bool, int, int)> checker = [](bool accum, size_t idx, int elt) {
+    reduce_fn_t<int, bool> checker = [](bool accum, size_t idx, int elt) {
         auto cur_matches = elt==idx;
         return cur_matches && accum;
     };
-    if(!ll->reduce<bool>(true, checker)) {
+    if(!ll->reduce(true, checker)) {
         return fail("the value of each element must be its index");
     }
     return pass();
@@ -153,14 +111,14 @@ testcase_ret test_reverse(string name) {
         return f();
     }
     // iterate from beginning to end and check indices
-    function<bool(bool, int, int)> checker = [](bool accum, size_t idx, int elt) {
+    reduce_fn_t<int, bool> checker = [](bool accum, size_t idx, int elt) {
         // the value of element at idx should be the mirror
         // of idx
         auto expected_val = num_pushes-idx;
         auto cur_matches = elt==expected_val;
         return cur_matches && accum;
     };
-    if(!ll->reduce<bool>(true, checker)) {
+    if(!ll->reduce(true, checker)) {
         return fail(
             "the value of each element must be the mirror of its index"
         );
@@ -168,27 +126,4 @@ testcase_ret test_reverse(string name) {
     return pass();
 }
 
-int main() {
-    // basic invariant checks
-    run_testcase(test_basic, "empty list");
-    
-    // check basic len() and get() functionality
-    run_testcase(
-        test_basic_size_and_get,
-        "basic size and get functionality"
-    );
-
-    run_testcase(
-        test_pop,
-        "pop"
-    );
-    
-    run_testcase(
-        test_reverse,
-        "reverse"
-    );
-    
-    cout << "All tests passed" << endl;
-    return 0;
-}
-
+#endif
