@@ -116,7 +116,7 @@ class LinkedList {
             return std::nullopt;
         }
         
-        // reverse reverses this linked list
+        // reverse reverses this linked list in place
         void reverse() {
             // if the list has 0 or 1 elements, do nothing
             if (this->size < 2) {
