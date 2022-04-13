@@ -12,3 +12,4 @@ testcase_ret test_pop(string name);
 testcase_ret test_reverse(string name);
 testcase_ret test_find(string name);
 testcase_ret test_map(string name);
+testcase_ret test_first_last(string name);

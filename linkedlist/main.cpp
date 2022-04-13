@@ -33,6 +33,11 @@ int main() {
         test_map,
         "map"
     );
+
+    run_testcase(
+        test_first_last,
+        "first and last"
+    );
     
     cout << "All tests passed" << endl;
     return 0;

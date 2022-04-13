@@ -59,6 +59,24 @@ class LinkedList {
             }
             this->size++;
         }
+
+        // first returns the first element in the list
+        // if there is one, or nullopt otherwise
+        std::optional<T> first() {
+            if (this->head == NULL) {
+                return std::nullopt;
+            }
+            return std::optional(this->head->val);
+        }
+
+        // last returns the last element in the list
+        // if there is one, or nullopt otherwise
+        std::optional<T> last() {
+            if (this->tail == NULL) {
+                return std::nullopt;
+            }
+            return std::optional(this->tail->val);
+        }
         
         template <typename U>
         std::shared_ptr<LinkedList<U>> map(map_fn_t<T, U> fn) {
@@ -101,7 +119,7 @@ class LinkedList {
             return ret;
         }
         
-        // get returns the node at index idx, or none if 
+        // get returns the node at index idx, or nullopt if 
         // no such node exists
         std::optional<T> get(size_t idx) {
             auto cur = this->head;

@@ -151,3 +151,45 @@ testcase_ret test_map(string name) {
     }
     return pass();
 }
+
+testcase_ret test_first_last(string name) {
+    // check is essentially a "function alias" so that we can
+    // easily call check(some_option, "abc") instead of
+    // check_option<string>(some_option, "abc") below.
+    //
+    // we need to force the compiler to interpret "abc" as
+    // a std::string rather than a const char*, and the 
+    // explicit type parameter does that
+    auto check = check_option<string>;
+
+    LinkedList<std::string> ll;
+    if(ll.first() != nullopt) {
+        return fail("first() should return nullopt on empty list");
+    }
+    if(ll.last() != nullopt) {
+        return fail("last() should return nullopt on empty list");
+    }
+    ll.append("abc");
+    if(!check(ll.first(), "abc")) {
+        return fail("first() should return something on non-empty list");
+    }
+    if(!check(ll.last(), "abc")) {
+        return fail("last() should return something on non-empty list");
+    }
+    ll.append("def");
+    if(!check(ll.first(), "abc")) {
+        return fail("first() should still return 'abc' after second append");
+    }
+    if(!check(ll.last(), "def")) {
+        return fail("last() should now return 'def' after second append");
+    }
+    ll.pop();
+    ll.pop();
+    if(ll.first() != nullopt) {
+        return fail("first() should return nullopt after popping the last element from the list");
+    }
+    if(ll.last() != nullopt) {
+        return fail("last() should return nullopt after popping the last element from the list");
+    }
+    return pass();
+}
