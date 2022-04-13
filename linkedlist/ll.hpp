@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <functional>
+#include <memory>
 
 template <typename T>
 struct Node {
@@ -9,9 +10,6 @@ struct Node {
         T val;
         Node<T>* next;
 };
-
-template <typename T, typename U>
-using reduce_fn_t = std::function<U(U, size_t, T)>;
 
 template <typename T>
 using find_fn_t = std::function<bool(size_t, T)>;
@@ -80,7 +78,7 @@ class LinkedList {
         std::optional<T> pop() {
             // if there's no head, return nothing
             if (this->head == NULL) {
-                return nullopt;
+                return std::nullopt;
             }
 
             auto curHead = this->head;
@@ -110,12 +108,12 @@ class LinkedList {
             size_t i = 0;
             while(NULL != cur) {
                 if (i == idx) {
-                    return optional<T>(cur->val);
+                    return std::optional<T>(cur->val);
                 }
                 cur = cur->next;
                 i++;
             }
-            return nullopt;
+            return std::nullopt;
         }
         
         // reverse reverses this linked list
@@ -144,41 +142,20 @@ class LinkedList {
             this->head = prev;
             this->tail = old_head;
         }
-        
-        // reduce applies fn to each element in the list,
-        // accumulating a value as it visits each element,
-        // and returns the final value.
-        //
-        // this function starts with init, so the accumulated
-        // value passed to the very first element in the list
-        // will be init. subsequent accumulated values will
-        // be the return value of the previous call to fn.
-        template <typename U>
-        U reduce(U init, reduce_fn_t<T, U> fn) {
-            U accum = init;
-            auto cur = this->head;
-            size_t idx = 0;
-            while (cur != NULL) {
-                accum = fn(accum, idx, cur->val);
-                cur = cur->next;
-                idx++;
-            }
-            return accum;
-        }
 
         // find returns the first element whose value 
         // satisfies fn(index, value), or none if no
         // such element exists.
-        optional<T> find(find_fn_t<T> fn) {
+        std::optional<T> find(find_fn_t<T> fn) {
             auto cur = this->head;
             size_t idx = 0;
             while (cur != NULL) {
                 if (fn(idx, cur->val)) {
-                    return optional<T>(cur->val);
+                    return std::optional<T>(cur->val);
                 }
                 cur = cur->next;
                 idx++;
             }
-            return nullopt;
+            return std::nullopt;
         }
 };

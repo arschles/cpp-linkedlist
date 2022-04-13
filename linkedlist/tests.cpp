@@ -55,11 +55,10 @@ testcase_ret test_basic_size_and_get(string name) {
     if(ll->get(ll->len()+1).has_value()) {
         return fail("get(len()+1) should return nullopt");
     }
-    reduce_fn_t<int, bool> checker = [](bool accum, size_t idx, int elt) {
-        auto cur_matches = elt==idx;
-        return cur_matches && accum;
+    check_fn_t<int> checker = [](size_t idx, int elt) {
+        return elt==idx;
     };
-    if(!ll->reduce(true, checker)) {
+    if(!check_all_elts(ll, checker)) {
         return fail("the value of each element must be its index");
     }
     return pass();
@@ -98,14 +97,13 @@ testcase_ret test_reverse(string name) {
         return f();
     }
     // iterate from beginning to end and check indices
-    reduce_fn_t<int, bool> checker = [](bool accum, size_t idx, int elt) {
+    check_fn_t<int> checker = [](size_t idx, int elt) {
         // the value of element at idx should be the mirror
         // of idx after the reversing action
         auto expected_val = num_elts-idx-1;
-        auto cur_matches = elt==expected_val;
-        return cur_matches && accum;
+        return elt==expected_val;
     };
-    if(!ll->reduce(true, checker)) {
+    if(!check_all_elts(ll, checker)) {
         return fail(
             "the value of each element must be the mirror of its index"
         );
