@@ -13,4 +13,4 @@ To run the tests, you need the following installed:
 - A `g++` compiler capable of compiling to the C++17 standard (e.g. `-std=c++17`)
 - `make`
 
-Once you have these tools installed, run `make run-ll` to execute the tests.
+Once you have these tools installed, run `make test-ll` to execute the tests.
