@@ -28,6 +28,11 @@ int main() {
         test_find,
         "find"
     );
+
+    run_testcase(
+        test_map,
+        "map"
+    );
     
     cout << "All tests passed" << endl;
     return 0;

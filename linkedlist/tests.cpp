@@ -137,3 +137,32 @@ testcase_ret test_find(string name) {
     }
     return pass();
 }
+
+testcase_ret test_map(string name) {
+    auto ll = create_ll(num_elts);
+    map_fn_t<int, string> mapper = [](size_t idx, int elt) {
+        return to_string(elt);
+    };
+    auto mapped_ll = ll->map(mapper);
+    
+    // mapped_ll is now a new linked list with elements
+    // like "0", "1", "2", ... (note the strings, not
+    // ints for each element).
+    // iterate to check each element
+    for(size_t i = 0; i < num_elts; i++) {
+        auto elt = mapped_ll->get(i);
+        if(!elt.has_value()) {
+            auto f = failer("get() should return a value for index ");
+            f << i;
+            return f();
+        }
+        auto expected_val = to_string(i);
+        if(elt.value() != expected_val) {
+            auto f = failer("value of index ");
+            f << i << " should be " << expected_val;
+            f << " (it was " << elt.value() << ")";
+            return f();
+        }
+    }
+    return pass();
+}

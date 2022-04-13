@@ -16,6 +16,8 @@ using reduce_fn_t = std::function<U(U, size_t, T)>;
 template <typename T>
 using find_fn_t = std::function<bool(size_t, T)>;
 
+template <typename T, typename U>
+using map_fn_t = std::function<U(size_t, T)>;
 template <typename T>
 class LinkedList {
     private:
@@ -60,6 +62,19 @@ class LinkedList {
             this->size++;
         }
         
+        template <typename U>
+        std::shared_ptr<LinkedList<U>> map(map_fn_t<T, U> fn) {
+            auto new_list = std::make_shared<LinkedList<U>>();
+            auto cur = this->head;
+            size_t i = 0;
+            while (cur != NULL) {
+                auto new_val = fn(i, cur->val);
+                new_list->append(new_val);
+                cur = cur->next;
+            }
+            return new_list;
+        }
+
         // pop removes the first element of the list
         // or returns nullopt if the list is empty
         std::optional<T> pop() {
