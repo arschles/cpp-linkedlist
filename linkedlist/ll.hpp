@@ -129,7 +129,7 @@ class LinkedList {
                     return std::optional<T>(cur->val);
                 }
                 cur = cur->next;
-                i++;
+                ++i;
             }
             return std::nullopt;
         }

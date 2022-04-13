@@ -40,7 +40,7 @@ bool check_all_elts(
     std::shared_ptr<LinkedList<T>> ll,
     check_fn_t<T> fn
 ) {
-    for (size_t i = 0; i < ll->len(); i++) {
+    for (size_t i = 0; i < ll->len(); ++i) {
         auto elt = ll->get(i).value();
         if(!fn(i, elt)) {
             return false;

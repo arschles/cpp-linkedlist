@@ -19,7 +19,7 @@ using namespace std;
 // done with it.
 std::shared_ptr<LinkedList<int>> create_ll(size_t num_nodes) {
     auto ll = new LinkedList<int>;
-    for (size_t i = 0; i < num_nodes; i++) {
+    for (size_t i = 0; i < num_nodes; ++i) {
         ll->append(i);
     }
     std::shared_ptr<LinkedList<int>> ret(ll);
@@ -68,7 +68,7 @@ testcase_ret test_pop(string name) {
     // next pop all the elements, checking size 
     // after each pop
     auto ll = create_ll(num_elts);
-    for (size_t i = 0; i < num_elts; i++) {
+    for (size_t i = 0; i < num_elts; ++i) {
         auto popped = ll->pop();
         if(!check_option(popped, int(i))) {
             auto f = failer("pop() should return ");
@@ -114,7 +114,7 @@ testcase_ret test_reverse(string name) {
 testcase_ret test_find(string name) {
     auto ll = create_ll(num_elts);
     // we should be able to find every element
-    for(size_t i = 0; i < num_elts; i++) {
+    for(size_t i = 0; i < num_elts; ++i) {
         find_fn_t<int> finder = [i](size_t idx, int elt) {
             return elt == i;
         };
@@ -139,7 +139,7 @@ testcase_ret test_map(string name) {
     // like "0", "1", "2", ... (note the strings, not
     // ints for each element).
     // iterate to check each element
-    for(size_t i = 0; i < num_elts; i++) {
+    for(size_t i = 0; i < num_elts; ++i) {
         auto elt = mapped_ll->get(i);
         auto expected_val = to_string(i);
         if(!check_option(elt, to_string(i))) {
