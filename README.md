@@ -8,6 +8,10 @@ This codebase contains:
 - A simple test harness
 - A suite of unit tests
 
+Furthermore, this codebase is not dependent on any external libraries, and also does not rely on any aggregate container data structures from the standard library.
+
+## Running Tests
+
 To run the tests, you need the following installed:
 
 - A `g++` compiler capable of compiling to the C++17 standard (e.g. `-std=c++17`)
