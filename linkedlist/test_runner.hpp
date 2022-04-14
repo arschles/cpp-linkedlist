@@ -1,5 +1,5 @@
 #pragma once
 
-#include "test_types.hpp"
+#include "test_case.hpp"
 
-void run_testcase(testcase_fn fn, string name);
+void run_testcase(testcase_fn_t fn, string name);
