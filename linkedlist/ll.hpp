@@ -77,6 +77,34 @@ class LinkedList {
             }
             return std::optional(this->tail->val);
         }
+
+        // middle returns the value in the middle of the
+        // list. if no items exist in the list, returns
+        // nullopt. if the list has an odd number of 
+        // items in it, middle returns the item closer
+        // to the end of the list
+        std::optional<T> middle() const {
+            if(this->head == NULL) {
+                // if there's no head, there's no middle
+                return std::nullopt;
+            }
+
+            // to find the middle, keep one pointer that advances
+            // one node at a time, and the other that advances
+            // two at a time. when the second pointer hits the
+            // end, the first pointer will be in the middle.
+            auto one = this->head;
+            auto two = this->head;
+            while(two->next != NULL) {
+                one = one->next;
+                two = two->next->next;
+                if (two == NULL) {
+                    break;
+                }
+            }
+
+            return std::optional<int>(one->val);
+        }
         
         template <typename U>
         std::shared_ptr<LinkedList<U>> map(map_fn_t<T, U> fn) const {

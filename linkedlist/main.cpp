@@ -38,6 +38,11 @@ int main() {
         test_first_last,
         "first and last"
     );
+
+    run_testcase(
+        test_middle,
+        "middle"
+    );
     
     cout << "All tests passed" << endl;
     return 0;

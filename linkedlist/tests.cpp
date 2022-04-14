@@ -33,20 +33,16 @@ const size_t num_elts = 200;
 testcase_ret_t test_basic(tester_ptr_t tester) {
     LinkedList<int> l; 
     if(l.len() != 0) {
-        tester->error("len() should return 0");
-        return;
+        return tester->error("len() should return 0");
     }
     if(l.get(0) != nullopt) {
-        tester->error("get(0) should return nullopt");
-        return;
+        return tester->error("get(0) should return nullopt");
     }
     if(l.get(123) != nullopt) {
-        tester->error("get(123) should return nullopt");
-        return;
+        return tester->error("get(123) should return nullopt");
     }
     if(l.pop() != nullopt) {
-        tester->error("pop() should return nullopt");
-        return;
+        return tester->error("pop() should return nullopt");
     }
 }
 
@@ -55,19 +51,16 @@ testcase_ret_t test_basic_size_and_get(tester_ptr_t tester) {
     // check the size and get function for each
     auto ll = create_ll(num_elts);
     if(num_elts != ll->len()) {
-        tester->error("len() should return the number of elements");
-        return;
+        return tester->error("len() should return the number of elements");
     }
     if(ll->get(ll->len()+1).has_value()) {
-        tester->error("get(len()+1) should return nullopt");
-        return;
+        return tester->error("get(len()+1) should return nullopt");
     }
     check_fn_t<int> checker = [](size_t idx, int elt) {
         return elt==idx;
     };
     if(!check_all_elts(ll, checker)) {
-        tester->error("the value of each element must be its index");
-        return;
+        return tester->error("the value of each element must be its index");
     }
 }
 
@@ -80,20 +73,17 @@ testcase_ret_t test_pop(tester_ptr_t tester) {
         if(!check_option(popped, int(i))) {
             std::stringstream str;
             str << "pop() should return " << i << " for index " << i;
-            tester->error(str);
-            return;
+            return tester->error(str);
         }
         if(ll->len() != (num_elts-1-i)) {
             std::stringstream str;
             str << "len() should return " << num_elts-1-i << " after " << i << " pops";
-            tester->error(str);
-            return;
+            return tester->error(str);
         }
     }
 
     if(0 != ll->len()) {
-        tester->error("len() should return 0 after all pops");
-        return;
+        return tester->error("len() should return 0 after all pops");
     }
 }
 
@@ -104,8 +94,7 @@ testcase_ret_t test_reverse(tester_ptr_t tester) {
         std::stringstream str;
         str << " len() after reverse should return the same " << num_elts << " value as before. ";
         str << " instead returned " << ll->len();
-        tester->error(str);
-        return;
+        return tester->error(str);
     }
     // iterate from beginning to end and check indices
     check_fn_t<int> checker = [](size_t idx, int elt) {
@@ -115,10 +104,9 @@ testcase_ret_t test_reverse(tester_ptr_t tester) {
         return elt==expected_val;
     };
     if(!check_all_elts(ll, checker)) {
-        tester->error(
+        return tester->error(
             "the value of each element must be the mirror of its index"
         );
-        return;
     }
 }
 
@@ -133,8 +121,7 @@ testcase_ret_t test_find(tester_ptr_t tester) {
         if(!check_option(find_res, int(i))) {
             std::stringstream str;
             str << "find() should return a value for index " << i;
-            tester->error(str);
-            return;
+            return tester->error(str);
         }
     }
 }
@@ -156,8 +143,7 @@ testcase_ret_t test_map(tester_ptr_t tester) {
         if(!check_option(elt, to_string(i))) {
             stringstream str;
             str << "get() should return " << to_string(i) << " for index " << i;
-            tester->error(str);
-            return;
+            return tester->error(str);
         }
     }
 }
@@ -175,38 +161,49 @@ testcase_ret_t test_first_last(tester_ptr_t tester) {
     LinkedList<std::string> ll;
     if(ll.first() != nullopt) {
         return tester->error("first() should return nullopt on empty list");
-        return;
     }
     if(ll.last() != nullopt) {
         return tester->error("last() should return nullopt on empty list");
-        return;
     }
     ll.append("abc");
     if(!check(ll.first(), "abc")) {
         return tester->error("first() should return something on non-empty list");
-        return;
     }
     if(!check(ll.last(), "abc")) {
         return tester->error("last() should return something on non-empty list");
-        return;
     }
     ll.append("def");
     if(!check(ll.first(), "abc")) {
         return tester->error("first() should still return 'abc' after second append");
-        return;
     }
     if(!check(ll.last(), "def")) {
         return tester->error("last() should now return 'def' after second append");
-        return;
     }
     ll.pop();
     ll.pop();
     if(ll.first() != nullopt) {
         return tester->error("first() should return nullopt after popping the last element from the list");
-        return;
     }
     if(ll.last() != nullopt) {
         return tester->error("last() should return nullopt after popping the last element from the list");
-        return;
+    }
+}
+
+testcase_ret_t test_middle(tester_ptr_t tests) {
+    LinkedList<int> ll0;
+    if(ll0.middle() != nullopt) {
+        tests->error("middle() should return nullopt on empty list");
+    }
+    auto ll1 = create_ll(1);
+    if(!check_option(ll1->middle(), 0)) {
+        tests->error("middle() should return the first element on a list of length 1");
+    }
+    auto ll2 = create_ll(2);
+    if(!check_option(ll2->middle(), 1)) {
+        tests->error("middle() should return the first element on a list of length 2");
+    }
+    auto ll3 = create_ll(3);
+    if(!check_option(ll3->middle(), 1)) {
+        tests->error("middle() should return the middle element on a list of length 3");
     }
 }

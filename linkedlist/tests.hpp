@@ -14,3 +14,4 @@ testcase_ret_t test_reverse(tester_ptr_t);
 testcase_ret_t test_find(tester_ptr_t);
 testcase_ret_t test_map(tester_ptr_t);
 testcase_ret_t test_first_last(tester_ptr_t);
+testcase_ret_t test_middle(tester_ptr_t);
