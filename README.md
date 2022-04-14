@@ -1,14 +1,8 @@
 # C++ Linked List Implementation
 
-This repository contains C++ code to implement a linked list functionality to operate on the data within the linked list data structure.
+This repository contains C++ linked list implementation, simple test harness, and a suite of unit tests.
 
-This codebase contains:
-
-- The linked list implementation
-- A simple test harness
-- A suite of unit tests
-
-Furthermore, this codebase is not dependent on any external libraries, and also does not rely on any aggregate container data structures from the standard library.
+The only dependencies herein are on the C++ standard library (C++17 standard), excluding all functionality from the standard containers.
 
 ## Running Tests
 
