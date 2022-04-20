@@ -18,12 +18,12 @@ using namespace std;
 // to its index in the list. it's the caller's 
 // responsibility to delete the linked list when
 // done with it.
-std::shared_ptr<LinkedList<int>> create_ll(size_t num_nodes) {
-    LinkedList<int>* ll = new LinkedList<int>();
+shared_ptr<LinkedList<int>> create_ll(size_t num_nodes) {
+    auto ll = make_shared<LinkedList<int>>();
     for (size_t i = 0; i < num_nodes; ++i) {
         ll->append(i);
     }
-    return std::shared_ptr<LinkedList<int>>(ll);
+    return ll;
 }
 
 const size_t num_elts = 200;
@@ -69,12 +69,12 @@ testcase_ret_t test_pop(const tester_ptr_t& tester) {
     for (size_t i = 0; i < num_elts; ++i) {
         auto popped = ll->pop();
         if(!check_option(popped, int(i))) {
-            std::stringstream str;
+            stringstream str;
             str << "pop() should return " << i << " for index " << i;
             return tester->error(str);
         }
         if(ll->len() != (num_elts-1-i)) {
-            std::stringstream str;
+            stringstream str;
             str << "len() should return " << num_elts-1-i << " after " << i << " pops";
             return tester->error(str);
         }
@@ -89,7 +89,7 @@ testcase_ret_t test_reverse(const tester_ptr_t& tester) {
     auto ll = create_ll(num_elts);
     ll->reverse();
     if(ll->len() != num_elts) {
-        std::stringstream str;
+        stringstream str;
         str << " len() after reverse should return the same " << num_elts << " value as before. ";
         str << " instead returned " << ll->len();
         return tester->error(str);
@@ -117,7 +117,7 @@ testcase_ret_t test_find(const tester_ptr_t& tester) {
         };
         auto find_res = ll->find(finder);
         if(!check_option(find_res, int(i))) {
-            std::stringstream str;
+            stringstream str;
             str << "find() should return a value for index " << i;
             return tester->error(str);
         }
@@ -126,7 +126,7 @@ testcase_ret_t test_find(const tester_ptr_t& tester) {
 
 testcase_ret_t test_map(const tester_ptr_t& tester) {
     auto ll = create_ll(num_elts);
-    LinkedList<int>::map_fn<std::string> mapper = [](size_t idx, int elt) {
+    LinkedList<int>::map_fn<string> mapper = [](size_t idx, int elt) {
         return to_string(elt);
     };
     auto mapped_ll = ll->map(mapper);
@@ -152,11 +152,11 @@ testcase_ret_t test_first_last(const tester_ptr_t& tester) {
     // check_option<string>(some_option, "abc") below.
     //
     // we need to force the compiler to interpret "abc" as
-    // a std::string rather than a const char*, and the 
+    // a string rather than a const char*, and the 
     // explicit type parameter does that
     auto check = check_option<string>;
 
-    LinkedList<std::string> ll;
+    LinkedList<string> ll;
     if(ll.first() != nullopt) {
         return tester->error("first() should return nullopt on empty list");
     }
@@ -219,5 +219,31 @@ testcase_ret_t test_operator_equal(const tester_ptr_t& tester) {
     auto ll3 = ll2->map(mapper);
     if (*ll1 == *ll3 || !(*ll1 != *ll3)) {
         return tester->error("linked lists with different elements should not be equal");
+    }
+}
+
+testcase_ret_t test_copy_ctor(const tester_ptr_t& tester) {
+    LinkedList<int> ll1;
+    ll1.append(1);
+    LinkedList<int> ll2(ll1);
+
+    if (ll1.len() != ll2.len()) {
+        return tester->error("copy constructor should produce equivalent copies");
+    }
+}
+testcase_ret_t test_swap(const tester_ptr_t& tester) {
+    auto ll1 = create_ll(num_elts);
+    auto ll2 = create_ll(num_elts*2);
+    // after the swap call, ll1, should have 1 element in it
+    // and ll2 should have num_elts
+    ll2 = ll1->swap(ll2);
+    check_fn_t<int> checker = [](size_t idx, int elt) {
+        return elt==idx;
+    };
+    if (ll1->len() != num_elts*2 || !check_all_elts(ll1, checker)) {
+        return tester->error("swap() should return the second list");
+    }
+    if (ll2->len() != num_elts || !check_all_elts(ll2, checker)) {
+        return tester->error("swap() should swap the existing list with the given one");
     }
 }

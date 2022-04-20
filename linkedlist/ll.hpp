@@ -25,6 +25,13 @@ class LinkedList {
 
 
         LinkedList(): head(NULL), tail(NULL), size(0) {}
+
+        LinkedList(const LinkedList<T>& other): head(NULL), tail(NULL), size(0) {
+            for (size_t i = 0; i < other.size; ++i) {
+                auto otherVal = other.get(i).value();
+                this->append(otherVal);
+            }
+        }
         
         ~LinkedList() {
             auto cur = this->head;
@@ -57,6 +64,23 @@ class LinkedList {
         bool operator!=(const LinkedList<T>& other) {
             return !(*this==other);
         };
+
+        // swap swaps the contents of other with this linked list and returns the
+        // previous contents of this one. the returned value will be a copy of the 
+        // contents of this linked list before the call to swap.
+        std::shared_ptr<LinkedList<T>> swap(const std::shared_ptr<LinkedList<T>> other) {
+            auto ret = std::shared_ptr<LinkedList<T>>(new LinkedList<T>(*this));
+            this->head = NULL;
+            this->tail = NULL;
+            this->size = 0;
+            Node<T>* otherNode = other->head;
+            while(otherNode != NULL) {
+                this->append(otherNode->val);
+                otherNode = otherNode->next;
+            }
+            
+            return ret;
+        }
         
         // len returns the current length of the list
         size_t len() const {
