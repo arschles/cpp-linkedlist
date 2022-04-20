@@ -205,3 +205,19 @@ testcase_ret_t test_middle(const tester_ptr_t& tests) {
         tests->error("middle() should return the middle element on a list of length 3");
     }
 }
+
+testcase_ret_t test_operator_equal(const tester_ptr_t& tester) {
+    // create to equal linked lists first
+    auto ll1 = create_ll(num_elts);
+    auto ll2 = create_ll(num_elts);
+    if (!(*ll1 == *ll2) || *ll1 != *ll2) {
+        return tester->error("identical linked lists should be equal");
+    }
+    LinkedList<int>::map_fn<int> mapper = [] (size_t idx, int elt) {
+        return elt + 1;
+    };
+    auto ll3 = ll2->map(mapper);
+    if (*ll1 == *ll3 || !(*ll1 != *ll3)) {
+        return tester->error("linked lists with different elements should not be equal");
+    }
+}

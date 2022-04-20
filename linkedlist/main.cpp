@@ -48,6 +48,11 @@ int main() {
         const string name("middle");
         run_testcase(&test_middle, name);
     }
+
+    {
+        const string name("operator==");
+        run_testcase(&test_operator_equal, name);
+    }
     
     cout << "All tests passed" << endl;
     return 0;

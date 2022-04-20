@@ -34,6 +34,29 @@ class LinkedList {
                 cur = next;
             }
         }
+
+        bool operator==(const LinkedList<T>& other) {
+            if (this->size != other.size) {
+                return false;
+            }
+            
+            Node<T>* thisCur = this->head;
+            Node<T>* otherCur = other.head;
+            // iterate each list item by item and compare
+            // values
+            while (thisCur != NULL) {
+                if (thisCur->val != otherCur->val) {
+                    return false;
+                }
+                thisCur = thisCur->next;
+                otherCur = otherCur->next;
+            }
+            return true;
+        };
+
+        bool operator!=(const LinkedList<T>& other) {
+            return !(*this==other);
+        };
         
         // len returns the current length of the list
         size_t len() const {

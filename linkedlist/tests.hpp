@@ -15,3 +15,4 @@ testcase_ret_t test_find(const tester_ptr_t&);
 testcase_ret_t test_map(const tester_ptr_t&);
 testcase_ret_t test_first_last(const tester_ptr_t&);
 testcase_ret_t test_middle(const tester_ptr_t&);
+testcase_ret_t test_operator_equal(const tester_ptr_t&);
