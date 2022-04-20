@@ -2,7 +2,6 @@
 
 #include <optional>
 #include <functional>
-
 #include "ll.hpp"
 
 // check_fn_t is the function used to "visit"
@@ -14,7 +13,7 @@ using check_fn_t = std::function<bool(size_t, T)>;
 // check_option returns true if opt.has_value()
 // and opt.value() is equal to expected
 template <typename T>
-bool check_option(optional<T> opt, T expected) {
+bool check_option(std::optional<T> opt, const T& expected) {
     if(!opt.has_value()) {
         return false;
     }
@@ -27,7 +26,7 @@ bool check_option(optional<T> opt, T expected) {
 // returns true
 template <typename T>
 bool check_all_elts(
-    shared_ptr<LinkedList<T>> ll,
+    std::shared_ptr<LinkedList<T>> ll,
     check_fn_t<T> fn
 ) {
     for (size_t i = 0; i < ll->len(); ++i) {

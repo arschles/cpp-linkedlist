@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-
 #include "str_ptr.hpp"
 
 // tester is the object that is passed to test case functions.
@@ -12,14 +11,9 @@ class tester {
         str_ptr_t test_name;
         str_ptrs_vec_t errors;
 
-        void append_error(const std::string& str) noexcept;
-
+        void append_error(const std::string& reason) noexcept;
     public:
-        tester(const std::string& name);
-        
-        // get_name gets the name of the test to which this
-        // tester is associated
-        str_ptr_t get_name() const noexcept;
+        explicit tester(const std::string& test_name);
         
         // get_errors returns the vector of errors that have
         // been added to this tester

@@ -2,17 +2,14 @@
 #include <string>
 #include <functional>
 #include <memory>
-// #include <iostream>
 #include <sstream>
 #include <stdlib.h>
 #include <optional>
-
-using namespace std;
-
 #include "ll.hpp"
 #include "test_case.hpp"
 #include "test_runner.hpp"
 #include "check.hpp"
+using namespace std;
 
 // create_ll creates a new linked list with num_nodes
 // nodes in it. the value of each node will correspond
@@ -20,12 +17,11 @@ using namespace std;
 // responsibility to delete the linked list when
 // done with it.
 std::shared_ptr<LinkedList<int>> create_ll(size_t num_nodes) {
-    auto ll = new LinkedList<int>;
+    LinkedList<int>* ll = new LinkedList<int>();
     for (size_t i = 0; i < num_nodes; ++i) {
         ll->append(i);
     }
-    std::shared_ptr<LinkedList<int>> ret(ll);
-    return ret;
+    return std::shared_ptr<LinkedList<int>>(ll);
 }
 
 const size_t num_elts = 200;
@@ -38,7 +34,7 @@ testcase_ret_t test_basic(tester_ptr_t tester) {
     if(l.get(0) != nullopt) {
         return tester->error("get(0) should return nullopt");
     }
-    if(l.get(123) != nullopt) {
+    if(l.get(num_elts+1) != nullopt) {
         return tester->error("get(123) should return nullopt");
     }
     if(l.pop() != nullopt) {

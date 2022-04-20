@@ -2,17 +2,14 @@
 #include <memory>
 #include <iostream>
 #include <sstream>
-using namespace std;
-
 #include "test_case.hpp"
-
 using namespace std;
 
-void run_testcase(testcase_fn_t fn, string name) {
+void run_testcase(const testcase_fn_t& fn, const string& name) {
     auto tester_ptr = shared_ptr<tester>(new tester(name));
     fn(tester_ptr);
     auto errs = tester_ptr->get_errors();
-    if(errs.size() > 0) {
+    if(!errs.empty()) {
         stringstream str;
         for(size_t i = 0; i < errs.size(); ++i) {
             str << "\t" << i+1 << ". " << *errs[i];

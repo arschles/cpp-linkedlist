@@ -1,48 +1,51 @@
 #include <iostream>
-using namespace std;
-
 #include "test_runner.hpp"
 #include "tests.hpp"
+using namespace std;
 
 int main() {
     // basic invariant checks
-    run_testcase(test_basic, "empty list");
+    {
+        const string name("empty list");
+        run_testcase(&test_basic, name);
+    }
     
     // check basic len() and get() functionality
-    run_testcase(
-        test_basic_size_and_get,
-        "basic size and get functionality"
-    );
-
-    run_testcase(
-        test_pop,
-        "pop"
-    );
+    {
+        const string name("basic size and get functionality");
+        run_testcase(&test_basic_size_and_get, name);
+    }
     
-    run_testcase(
-        test_reverse,
-        "reverse"
-    );
+    // testing the pop function
+    {
+        const string name("pop");
+        run_testcase(&test_pop, name);
+    }
+    
+    {
+        const string name("reverse");
+        run_testcase(&test_reverse, name);
+    }
 
-    run_testcase(
-        test_find,
-        "find"
-    );
+    {
+        const string name("find");
+        run_testcase(&test_find, name);
+    }
 
-    run_testcase(
-        test_map,
-        "map"
-    );
+    {
+        const string name("map");
+        run_testcase(&test_map, name);
+    }
 
-    run_testcase(
-        test_first_last,
-        "first and last"
-    );
-
-    run_testcase(
-        test_middle,
-        "middle"
-    );
+    {
+        const string name("first and last");
+        run_testcase(&test_first_last, name);
+    }
+    
+    {
+        const string name("middle");
+        run_testcase(&test_middle, name);
+    }
     
     cout << "All tests passed" << endl;
     return 0;

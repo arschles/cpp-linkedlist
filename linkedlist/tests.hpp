@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-
 #include "ll.hpp"
 #include "test_case.hpp"
 

@@ -23,12 +23,8 @@ class LinkedList {
         Node<T> *tail;
         size_t size;
     
-    public:
-        LinkedList() {
-            this->head = NULL;
-            this->tail = NULL;
-            this->size = 0;
-        }
+    public:        
+        LinkedList(): head(NULL), tail(NULL), size(0) {}
         
         ~LinkedList() {
             auto cur = this->head;
@@ -45,7 +41,7 @@ class LinkedList {
         };
         
         // append adds val to the end of the list
-        void append(T val) {
+        void append(const T& val) {
             auto node = new Node<T>;
             node->val = val;
             node->next = NULL;
