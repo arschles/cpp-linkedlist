@@ -3,12 +3,14 @@
 #include <functional>
 #include <memory>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <optional>
+
+#include "check.hpp"
 #include "ll.hpp"
 #include "test_case.hpp"
 #include "test_runner.hpp"
-#include "check.hpp"
+
 using namespace std;
 
 // create_ll creates a new linked list with num_nodes
@@ -26,7 +28,7 @@ std::shared_ptr<LinkedList<int>> create_ll(size_t num_nodes) {
 
 const size_t num_elts = 200;
 
-testcase_ret_t test_basic(tester_ptr_t tester) {
+testcase_ret_t test_basic(const tester_ptr_t& tester) {
     LinkedList<int> l; 
     if(l.len() != 0) {
         return tester->error("len() should return 0");
@@ -42,7 +44,7 @@ testcase_ret_t test_basic(tester_ptr_t tester) {
     }
 }
 
-testcase_ret_t test_basic_size_and_get(tester_ptr_t tester) {
+testcase_ret_t test_basic_size_and_get(const tester_ptr_t& tester) {
     // create new linked list, then
     // check the size and get function for each
     auto ll = create_ll(num_elts);
@@ -60,7 +62,7 @@ testcase_ret_t test_basic_size_and_get(tester_ptr_t tester) {
     }
 }
 
-testcase_ret_t test_pop(tester_ptr_t tester) {
+testcase_ret_t test_pop(const tester_ptr_t& tester) {
     // next pop all the elements, checking size 
     // after each pop
     auto ll = create_ll(num_elts);
@@ -83,7 +85,7 @@ testcase_ret_t test_pop(tester_ptr_t tester) {
     }
 }
 
-testcase_ret_t test_reverse(tester_ptr_t tester) {
+testcase_ret_t test_reverse(const tester_ptr_t& tester) {
     auto ll = create_ll(num_elts);
     ll->reverse();
     if(ll->len() != num_elts) {
@@ -106,7 +108,7 @@ testcase_ret_t test_reverse(tester_ptr_t tester) {
     }
 }
 
-testcase_ret_t test_find(tester_ptr_t tester) {
+testcase_ret_t test_find(const tester_ptr_t& tester) {
     auto ll = create_ll(num_elts);
     // we should be able to find every element
     for(size_t i = 0; i < num_elts; ++i) {
@@ -122,7 +124,7 @@ testcase_ret_t test_find(tester_ptr_t tester) {
     }
 }
 
-testcase_ret_t test_map(tester_ptr_t tester) {
+testcase_ret_t test_map(const tester_ptr_t& tester) {
     auto ll = create_ll(num_elts);
     map_fn_t<int, string> mapper = [](size_t idx, int elt) {
         return to_string(elt);
@@ -144,7 +146,7 @@ testcase_ret_t test_map(tester_ptr_t tester) {
     }
 }
 
-testcase_ret_t test_first_last(tester_ptr_t tester) {
+testcase_ret_t test_first_last(const tester_ptr_t& tester) {
     // check is essentially a "function alias" so that we can
     // easily call check(some_option, "abc") instead of
     // check_option<string>(some_option, "abc") below.
@@ -185,7 +187,7 @@ testcase_ret_t test_first_last(tester_ptr_t tester) {
     }
 }
 
-testcase_ret_t test_middle(tester_ptr_t tests) {
+testcase_ret_t test_middle(const tester_ptr_t& tests) {
     LinkedList<int> ll0;
     if(ll0.middle() != nullopt) {
         tests->error("middle() should return nullopt on empty list");

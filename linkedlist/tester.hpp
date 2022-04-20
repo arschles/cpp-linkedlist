@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+
 #include "str_ptr.hpp"
 
 // tester is the object that is passed to test case functions.

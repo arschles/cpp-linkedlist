@@ -10,7 +10,7 @@ test: build
 lint:
 	clang-tidy \
 		--warnings-as-errors=* \
-		-checks=clang-analyzer-*,-clang-analyzer-cplusplus*,readability-*,bugprone-*,cppcoreguidelines-,boost-,abseil-,cert-,modernize- \
+		-checks=abseil-,boost-,bugprone-,cert-,clang-analyzer-,concurrency-,cppcoreguidelines-,darwin-,google-,hicpp-,linuxkernel-,llvm-,llvmlibc-,misc-,modernize-,performance-,portability-,readabilty- \
 		--extra-arg=-std=c++17 \
 		-header-filter=.* \
 		linkedlist/*.cpp

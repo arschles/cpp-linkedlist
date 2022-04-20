@@ -1,8 +1,10 @@
 #include <memory>
-#include <string>
 #include <sstream>
-#include "tester.hpp"
+#include <string>
+
 #include "str_ptr.hpp"
+#include "tester.hpp"
+
 using namespace std;
 
 tester::tester(const string& name) {

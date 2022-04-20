@@ -1,11 +1,12 @@
 #pragma once
 
+#include <functional>
+#include <optional>
+#include <sstream>
 #include <string>
 #include <tuple>
-#include <functional>
-#include <sstream>
-#include <optional>
 #include <vector>
+
 #include "ll.hpp"
 #include "str_ptr.hpp"
 #include "tester.hpp"
@@ -16,4 +17,4 @@ typedef void testcase_ret_t;
 // case accepts
 typedef std::shared_ptr<tester> tester_ptr_t;
 // testcase_fn is the function signature for all test cases
-typedef std::function<testcase_ret_t(tester_ptr_t)> testcase_fn_t;
+typedef std::function<testcase_ret_t(const tester_ptr_t&)> testcase_fn_t;

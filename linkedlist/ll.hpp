@@ -1,8 +1,8 @@
 #pragma once
 
-#include <optional>
 #include <functional>
 #include <memory>
+#include <optional>
 
 template <typename T>
 struct Node {
@@ -89,8 +89,7 @@ class LinkedList {
             // one node at a time, and the other that advances
             // two at a time. when the second pointer hits the
             // end, the first pointer will be in the middle.
-            auto one = this->head;
-            auto two = this->head;
+            auto one = this->head, two=one;
             while(two->next != NULL) {
                 one = one->next;
                 two = two->next->next;
@@ -99,7 +98,7 @@ class LinkedList {
                 }
             }
 
-            return std::optional<int>(one->val);
+            return std::make_optional(one->val);
         }
         
         template <typename U>
@@ -170,7 +169,7 @@ class LinkedList {
             // previous node so that we can set the
             // current node's next pointer to the previous
             auto old_head = this->head;
-            auto cur = this->head;
+            auto cur = old_head;
             Node<T> * prev = NULL;
             while (cur != NULL) {
                 auto old_next = cur->next;
@@ -193,7 +192,7 @@ class LinkedList {
             size_t idx = 0;
             while (cur != NULL) {
                 if (fn(idx, cur->val)) {
-                    return std::optional<T>(cur->val);
+                    return std::make_optional(cur->val);
                 }
                 cur = cur->next;
                 ++idx;

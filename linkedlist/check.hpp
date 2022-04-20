@@ -1,7 +1,8 @@
 #pragma once
 
-#include <optional>
 #include <functional>
+#include <optional>
+
 #include "ll.hpp"
 
 // check_fn_t is the function used to "visit"

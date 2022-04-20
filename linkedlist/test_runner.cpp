@@ -1,8 +1,10 @@
-#include <string>
-#include <memory>
 #include <iostream>
+#include <memory>
 #include <sstream>
+#include <string>
+
 #include "test_case.hpp"
+
 using namespace std;
 
 void run_testcase(const testcase_fn_t& fn, const string& name) {
