@@ -112,7 +112,7 @@ testcase_ret_t test_find(const tester_ptr_t& tester) {
     auto ll = create_ll(num_elts);
     // we should be able to find every element
     for(size_t i = 0; i < num_elts; ++i) {
-        find_fn_t<int> finder = [i](size_t idx, int elt) {
+        LinkedList<int>::find_fn finder = [i](size_t idx, int elt) {
             return elt == i;
         };
         auto find_res = ll->find(finder);
@@ -126,7 +126,7 @@ testcase_ret_t test_find(const tester_ptr_t& tester) {
 
 testcase_ret_t test_map(const tester_ptr_t& tester) {
     auto ll = create_ll(num_elts);
-    map_fn_t<int, string> mapper = [](size_t idx, int elt) {
+    LinkedList<int>::map_fn<std::string> mapper = [](size_t idx, int elt) {
         return to_string(elt);
     };
     auto mapped_ll = ll->map(mapper);

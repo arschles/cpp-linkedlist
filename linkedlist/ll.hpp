@@ -12,18 +12,18 @@ struct Node {
 };
 
 template <typename T>
-using find_fn_t = std::function<bool(size_t, T)>;
-
-template <typename T, typename U>
-using map_fn_t = std::function<U(size_t, T)>;
-template <typename T>
 class LinkedList {
     private:
         Node<T> *head;
         Node<T> *tail;
         size_t size;
     
-    public:        
+    public:
+        using find_fn = std::function<bool(size_t, T)>;
+        template <typename U>
+        using map_fn = std::function<U(size_t, T)>;
+
+
         LinkedList(): head(NULL), tail(NULL), size(0) {}
         
         ~LinkedList() {
@@ -62,7 +62,7 @@ class LinkedList {
             if (this->head == NULL) {
                 return std::nullopt;
             }
-            return std::optional(this->head->val);
+            return std::make_optional(this->head->val);
         }
 
         // last returns the last element in the list
@@ -71,7 +71,7 @@ class LinkedList {
             if (this->tail == NULL) {
                 return std::nullopt;
             }
-            return std::optional(this->tail->val);
+            return std::make_optional(this->tail->val);
         }
 
         // middle returns the value in the middle of the
@@ -102,7 +102,7 @@ class LinkedList {
         }
         
         template <typename U>
-        std::shared_ptr<LinkedList<U>> map(map_fn_t<T, U> fn) const {
+        std::shared_ptr<LinkedList<U>> map(map_fn<U> fn) const {
             auto new_list = std::make_shared<LinkedList<U>>();
             auto cur = this->head;
             size_t i = 0;
@@ -149,7 +149,7 @@ class LinkedList {
             size_t i = 0;
             while(NULL != cur) {
                 if (i == idx) {
-                    return std::optional<T>(cur->val);
+                    return std::make_optional<T>(cur->val);
                 }
                 cur = cur->next;
                 ++i;
@@ -187,7 +187,7 @@ class LinkedList {
         // find returns the first element whose value 
         // satisfies fn(index, value), or none if no
         // such element exists.
-        std::optional<T> find(find_fn_t<T> fn) const {
+        std::optional<T> find(find_fn fn) const {
             auto cur = this->head;
             size_t idx = 0;
             while (cur != NULL) {
