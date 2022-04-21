@@ -48,6 +48,7 @@ bool check_all_elts(
         return false;
     }
     for (size_t i = 0; i < ll->len(); ++i) {
+        // TODO: use iterator instead of get
         auto elt = ll->get(i).value();
         if(!check_option<T>(elt, expected->at(i))) {
             return false;

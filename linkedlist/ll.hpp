@@ -190,7 +190,8 @@ class LinkedList {
         }
         
         // get returns the node at index idx, or nullopt if 
-        // no such node exists
+        // no such node exists. this is an O(N) operation.
+        // TODO: implement iterators for efficient range operations
         std::optional<T> get(size_t idx) const {
             auto cur = this->head;
             size_t i = 0;
