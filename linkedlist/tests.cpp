@@ -1,10 +1,11 @@
-#include <tuple>
-#include <string>
+#include <cstdlib>
 #include <functional>
 #include <memory>
-#include <sstream>
-#include <cstdlib>
 #include <optional>
+#include <sstream>
+#include <string>
+#include <tuple>
+#include <vector>
 
 #include "check.hpp"
 #include "ll.hpp"
@@ -219,19 +220,13 @@ testcase_ret_t test_operator_equal(const tester_ptr_t& tester) {
 testcase_ret_t test_copy_ctor(const tester_ptr_t& tester) {
     LinkedList<int> ll1;
     ll1.append(1);
+    ll1.append(4);
     auto ll2 = make_shared<LinkedList<int>>(ll1);
-    check_fn<int> checker = [](size_t idx, int elt) {
-        return elt==idx+1;
-    };
 
-    if ((ll1.len() != ll2->len()) || !check_all_elts(ll2, checker)) {
+    auto expected = {1, 4};
+
+    if ((ll1.len() != ll2->len()) || !check_all_elts<int>(ll2, make_shared<vector<int>>(expected))) {
         return tester->error("const& copy constructor should produce equivalent copies");
-    }
-
-    auto ll3 = create_ll(1);
-    auto ll4 = make_shared<LinkedList<int>>(ll3);
-    if (ll3->len() != ll4->len() || !check_all_elts(ll4, checker)) {
-        return tester->error("shared_ptr copy constructor should produce equivalent copies");
     }
 }
 testcase_ret_t test_swap(const tester_ptr_t& tester) {

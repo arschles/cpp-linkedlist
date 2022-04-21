@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <optional>
-
+#include <vector>
 #include "ll.hpp"
 
 // check_fn is the function used to "visit"
@@ -38,3 +38,20 @@ bool check_all_elts(
     }
     return true;
 };
+
+template <typename T>
+bool check_all_elts(
+    std::shared_ptr<LinkedList<T>> ll,
+    std::shared_ptr<std::vector<T>> expected
+){
+    if(expected->size() != ll->len()) {
+        return false;
+    }
+    for (size_t i = 0; i < ll->len(); ++i) {
+        auto elt = ll->get(i).value();
+        if(!check_option<T>(elt, expected->at(i))) {
+            return false;
+        }
+    }
+    return true;
+}

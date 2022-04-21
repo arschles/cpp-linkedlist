@@ -32,13 +32,6 @@ class LinkedList {
                 this->append(otherVal);
             }
         }
-
-        explicit LinkedList(const std::shared_ptr<LinkedList<T>> other): head(NULL), tail(NULL), size(0) {
-            for (size_t i = 0; i < other->size; ++i) {
-                auto otherVal = other->get(i).value();
-                this->append(otherVal);
-            }
-        }
         
         ~LinkedList() {
             auto cur = this->head;
