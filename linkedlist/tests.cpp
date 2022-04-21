@@ -219,7 +219,7 @@ testcase_ret_t test_operator_equal(const tester_ptr_t& tester) {
 testcase_ret_t test_copy_ctor(const tester_ptr_t& tester) {
     LinkedList<int> ll1;
     ll1.append(1);
-    auto ll2 = shared_ptr<LinkedList<int>>(new LinkedList<int>(ll1));
+    auto ll2 = make_shared<LinkedList<int>>(ll1);
     check_fn<int> checker = [](size_t idx, int elt) {
         return elt==idx+1;
     };
@@ -229,7 +229,7 @@ testcase_ret_t test_copy_ctor(const tester_ptr_t& tester) {
     }
 
     auto ll3 = create_ll(1);
-    auto ll4 = shared_ptr<LinkedList<int>>(new LinkedList<int>(ll3));
+    auto ll4 = make_shared<LinkedList<int>>(ll3);
     if (ll3->len() != ll4->len() || !check_all_elts(ll4, checker)) {
         return tester->error("shared_ptr copy constructor should produce equivalent copies");
     }

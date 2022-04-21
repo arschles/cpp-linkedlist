@@ -8,7 +8,7 @@
 using namespace std;
 
 void run_testcase(const testcase_fn_t& fn, const string& name) {
-    auto tester_ptr = shared_ptr<tester>(new tester(name));
+    auto tester_ptr = make_shared<tester>(name);
     fn(tester_ptr);
     auto errs = tester_ptr->get_errors();
     if(!errs.empty()) {

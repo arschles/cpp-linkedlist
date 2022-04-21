@@ -8,7 +8,7 @@
 using namespace std;
 
 tester::tester(const string& name) {
-    this->test_name = shared_ptr<string>(new string(name));
+    this->test_name = make_shared<string>(name);
 };
 
 str_ptrs_vec_t tester::get_errors() const noexcept {
@@ -16,7 +16,7 @@ str_ptrs_vec_t tester::get_errors() const noexcept {
 };
 
 void tester::append_error(const std::string& reason) noexcept {
-    this->errors.push_back(shared_ptr<string>(new string(reason)));
+    this->errors.push_back(make_shared<string>(reason));
 };
 
 void tester::error(const char* reason) noexcept {
