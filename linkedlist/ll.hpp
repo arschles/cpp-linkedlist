@@ -7,8 +7,10 @@
 template <typename T>
 struct Node {
     public:
-        T val;
         Node<T>* next;
+        T val;
+        
+        Node(T val): val(val), next(NULL) {}
 };
 
 template <typename T>
@@ -89,9 +91,7 @@ class LinkedList {
         
         // append adds val to the end of the list
         void append(const T& val) {
-            auto node = new Node<T>;
-            node->val = val;
-            node->next = NULL;
+            auto node = new Node<T>(val);
 
             if (this->head == NULL) {
                 this->head = node;
