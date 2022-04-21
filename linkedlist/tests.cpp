@@ -54,10 +54,9 @@ testcase_ret_t test_basic_size_and_get(const tester_ptr_t& tester) {
     if(ll->get(ll->len()+1).has_value()) {
         return tester->error("get(len()+1) should return nullopt");
     }
-    check_fn_t<int> checker = [](size_t idx, int elt) {
-        return elt==idx;
-    };
-    if(!check_all_elts(ll, checker)) {
+    if(!check_all_elts<int>(ll, [](size_t idx, int elt) {
+        return elt == idx;
+    })) {
         return tester->error("the value of each element must be its index");
     }
 }
@@ -94,14 +93,12 @@ testcase_ret_t test_reverse(const tester_ptr_t& tester) {
         str << " instead returned " << ll->len();
         return tester->error(str);
     }
-    // iterate from beginning to end and check indices
-    check_fn_t<int> checker = [](size_t idx, int elt) {
+    if(!check_all_elts<int>(ll, [](size_t idx, int elt) {
         // the value of element at idx should be the mirror
         // of idx after the reversing action
         auto expected_val = num_elts-idx-1;
         return elt==expected_val;
-    };
-    if(!check_all_elts(ll, checker)) {
+    })) {
         return tester->error(
             "the value of each element must be the mirror of its index"
         );
@@ -112,10 +109,9 @@ testcase_ret_t test_find(const tester_ptr_t& tester) {
     auto ll = create_ll(num_elts);
     // we should be able to find every element
     for(size_t i = 0; i < num_elts; ++i) {
-        LinkedList<int>::find_fn finder = [i](size_t idx, int elt) {
+        auto find_res = ll->find([i](size_t idx, int elt) {
             return elt == i;
-        };
-        auto find_res = ll->find(finder);
+        });
         if(!check_option(find_res, int(i))) {
             stringstream str;
             str << "find() should return a value for index " << i;
@@ -126,10 +122,9 @@ testcase_ret_t test_find(const tester_ptr_t& tester) {
 
 testcase_ret_t test_map(const tester_ptr_t& tester) {
     auto ll = create_ll(num_elts);
-    LinkedList<int>::map_fn<string> mapper = [](size_t idx, int elt) {
+    auto mapped_ll = ll->map<string>([](size_t idx, int elt) {
         return to_string(elt);
-    };
-    auto mapped_ll = ll->map(mapper);
+    });
     
     // mapped_ll is now a new linked list with elements
     // like "0", "1", "2", ... (note the strings, not
@@ -213,10 +208,9 @@ testcase_ret_t test_operator_equal(const tester_ptr_t& tester) {
     if (!(*ll1 == *ll2) || *ll1 != *ll2) {
         return tester->error("identical linked lists should be equal");
     }
-    LinkedList<int>::map_fn<int> mapper = [] (size_t idx, int elt) {
+    auto ll3 = ll2->map<int>([](size_t idx, int elt) {
         return elt + 1;
-    };
-    auto ll3 = ll2->map(mapper);
+    });
     if (*ll1 == *ll3 || !(*ll1 != *ll3)) {
         return tester->error("linked lists with different elements should not be equal");
     }
@@ -225,10 +219,19 @@ testcase_ret_t test_operator_equal(const tester_ptr_t& tester) {
 testcase_ret_t test_copy_ctor(const tester_ptr_t& tester) {
     LinkedList<int> ll1;
     ll1.append(1);
-    LinkedList<int> ll2(ll1);
+    auto ll2 = shared_ptr<LinkedList<int>>(new LinkedList<int>(ll1));
+    check_fn<int> checker = [](size_t idx, int elt) {
+        return elt==idx+1;
+    };
 
-    if (ll1.len() != ll2.len()) {
-        return tester->error("copy constructor should produce equivalent copies");
+    if ((ll1.len() != ll2->len()) || !check_all_elts(ll2, checker)) {
+        return tester->error("const& copy constructor should produce equivalent copies");
+    }
+
+    auto ll3 = create_ll(1);
+    auto ll4 = shared_ptr<LinkedList<int>>(new LinkedList<int>(ll3));
+    if (ll3->len() != ll4->len() || !check_all_elts(ll4, checker)) {
+        return tester->error("shared_ptr copy constructor should produce equivalent copies");
     }
 }
 testcase_ret_t test_swap(const tester_ptr_t& tester) {
@@ -237,7 +240,7 @@ testcase_ret_t test_swap(const tester_ptr_t& tester) {
     // after the swap call, ll1, should have 1 element in it
     // and ll2 should have num_elts
     ll2 = ll1->swap(ll2);
-    check_fn_t<int> checker = [](size_t idx, int elt) {
+    check_fn<int> checker = [](size_t idx, int elt) {
         return elt==idx;
     };
     if (ll1->len() != num_elts*2 || !check_all_elts(ll1, checker)) {
