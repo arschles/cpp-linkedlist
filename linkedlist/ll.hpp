@@ -4,14 +4,8 @@
 #include <memory>
 #include <optional>
 
-template <typename T>
-struct Node {
-    public:
-        Node<T>* next;
-        T val;
-        
-        Node(T val): val(val), next(NULL) {}
-};
+#include "ll_iter.hpp"
+#include "node.hpp"
 
 template <typename T>
 class LinkedList {
@@ -112,6 +106,12 @@ class LinkedList {
             return std::make_optional(this->head->val);
         }
 
+        // begin returns a standard C++ iterator that starts
+        // at the first element
+        LinkedListIterator<T> begin() {
+            return LinkedListIterator<T>(this->head);
+        }
+
         // last returns the last element in the list
         // if there is one, or nullopt otherwise
         std::optional<T> last() const {
@@ -120,6 +120,8 @@ class LinkedList {
             }
             return std::make_optional(this->tail->val);
         }
+
+
 
         // middle returns the value in the middle of the
         // list. if no items exist in the list, returns
