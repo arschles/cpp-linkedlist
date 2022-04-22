@@ -7,24 +7,13 @@
 #include <boost/test/included/unit_test.hpp>
 
 #include "ll.hpp"
+#include "ll_printer.hpp"
 #include "ll_util.hpp"
 
 using namespace std;
+using namespace linkedlist;
 
 const size_t num_elts = 201;
-
-// this function is needed to allow BOOST_TEST to print
-// out the LinkedList when the assertion failed.
-// we implement this function instead of implementing operator<<
-// directly on the LinkedList. see the following link for more 
-// detail:
-// https://www.boost.org/doc/libs/1_64_0/libs/test/doc/html/boost_test/test_output/test_tools_support_for_logging/testing_tool_output_disable.html
-template <typename T>
-ostream& boost_test_print_type(ostream& ostr, LinkedList<T> const& ll) {
-    ostr << "LinkedList with length: " << ll.len();
-    return ostr;
-}
-
 
 BOOST_AUTO_TEST_CASE(empty_list) {
     LinkedList<string> l;

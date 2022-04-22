@@ -7,6 +7,7 @@
 
 #include "node.hpp"
 
+namespace linkedlist {
 template <typename T>
 using find_fn = std::function<bool(size_t, T)>;
 
@@ -24,6 +25,10 @@ class LinkedList {
         size_t size;
     
     public:
+        
+        ///// 
+        // constructors and destructor
+        /////
         LinkedList(): head(NULL), tail(NULL), size(0) {}
 
         explicit LinkedList(const LinkedList<T>& other): head(NULL), tail(NULL), size(0) {
@@ -41,7 +46,10 @@ class LinkedList {
                 cur = next;
             }
         }
-
+        
+        /////
+        // operators
+        /////
         bool operator==(const LinkedList<T>& other) const {
             if (this->size != other.size) {
                 return false;
@@ -65,6 +73,10 @@ class LinkedList {
             return !(*this==other);
         };
 
+        /////
+        // modifiers
+        /////
+
         // swap swaps the contents of other with this linked list and returns the
         // previous contents of this one. the returned value will be a copy of the 
         // contents of this linked list before the call to swap.
@@ -81,12 +93,7 @@ class LinkedList {
             
             return ret;
         }
-        
-        // len returns the current length of the list
-        size_t len() const {
-            return this->size;
-        };
-        
+
         // append adds val to the end of the list
         void append(const T& val) {
             auto node = new Node<T>(val);
@@ -100,7 +107,16 @@ class LinkedList {
             }
             this->size++;
         }
-
+        
+        /////
+        // getters
+        /////
+        
+        // len returns the current length of the list
+        size_t len() const {
+            return this->size;
+        };
+        
         // first returns the first element in the list
         // if there is one, or nullopt otherwise
         std::optional<T> first() const {
@@ -145,7 +161,66 @@ class LinkedList {
 
             return std::make_optional(one->val);
         }
+
+        // pop removes the first element of the list
+        // or returns nullopt if the list is empty
+        std::optional<T> pop() {
+            // if there's no head, return nothing
+            if (this->head == NULL) {
+                return std::nullopt;
+            }
+
+            auto curHead = this->head;
+            auto newHead = this->head->next;
+            if (newHead == NULL) {
+                // if the new head is null,
+                // set everything to null and 0
+                this->head = NULL;
+                this->tail = NULL;
+                this->size = 0;
+            } else {
+                // otherwise, there is a new head
+                // so set the official head to 
+                // the new head and decrement the size
+                this->head = newHead;
+                this->size--;
+            }
+            auto ret = curHead->val;
+            delete curHead;
+            return ret;
+        }
+
+        // reverse reverses this linked list in place
+        void reverse() {
+            // if the list has 0 or 1 elements, do nothing
+            if (this->size < 2) {
+                return;
+            }
+            // otherwise, visit every node in the list and
+            // reverse the next pointer of each. for each 
+            // node visited, we'll need to keep track of the
+            // previous node so that we can set the
+            // current node's next pointer to the previous
+            auto old_head = this->head;
+            auto cur = old_head;
+            Node<T> * prev = NULL;
+            while (cur != NULL) {
+                auto old_next = cur->next;
+                cur->next = prev;
+                prev = cur;
+                cur = old_next;
+            }
+            // after we finish visiting all nodes,
+            // the prev pointer will be pointing to the 
+            // new head of the list.
+            this->head = prev;
+            this->tail = old_head;
+        }
         
+        /////
+        // transformers
+        /////
+
         // map iterates this list, applies fn to each element in the
         // list, constructs a new list with the results and returns
         // it
@@ -175,33 +250,7 @@ class LinkedList {
             }
         }
 
-        // pop removes the first element of the list
-        // or returns nullopt if the list is empty
-        std::optional<T> pop() {
-            // if there's no head, return nothing
-            if (this->head == NULL) {
-                return std::nullopt;
-            }
-
-            auto curHead = this->head;
-            auto newHead = this->head->next;
-            if (newHead == NULL) {
-                // if the new head is null,
-                // set everything to null and 0
-                this->head = NULL;
-                this->tail = NULL;
-                this->size = 0;
-            } else {
-                // otherwise, there is a new head
-                // so set the official head to 
-                // the new head and decrement the size
-                this->head = newHead;
-                this->size--;
-            }
-            auto ret = curHead->val;
-            delete curHead;
-            return ret;
-        }
+        
         
         // get returns the node at index idx, or nullopt if 
         // no such node exists. this is an O(N) operation.
@@ -217,33 +266,6 @@ class LinkedList {
                 ++i;
             }
             return std::nullopt;
-        }
-        
-        // reverse reverses this linked list in place
-        void reverse() {
-            // if the list has 0 or 1 elements, do nothing
-            if (this->size < 2) {
-                return;
-            }
-            // otherwise, visit every node in the list and
-            // reverse the next pointer of each. for each 
-            // node visited, we'll need to keep track of the
-            // previous node so that we can set the
-            // current node's next pointer to the previous
-            auto old_head = this->head;
-            auto cur = old_head;
-            Node<T> * prev = NULL;
-            while (cur != NULL) {
-                auto old_next = cur->next;
-                cur->next = prev;
-                prev = cur;
-                cur = old_next;
-            }
-            // after we finish visiting all nodes,
-            // the prev pointer will be pointing to the 
-            // new head of the list.
-            this->head = prev;
-            this->tail = old_head;
         }
 
         // find returns the first element whose value 
@@ -262,3 +284,4 @@ class LinkedList {
             return std::nullopt;
         }
 };
+} // linkedlist
