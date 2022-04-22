@@ -6,7 +6,7 @@ All sources in [`./linkedlist`](./linkedlist) have dependencies only on non-cont
 
 - All code in [`./linkedlist`](./linkedlist).
 - The C++17 standard library, including containers.
-- The Boost.Test library:
+- The [Boost.Test library](https://www.boost.org/doc/libs/1_79_0/libs/test/doc/html/index.html):
   - If on Ubuntu, install with this command: `sudo apt-get install libboost-all-dev`.
   - It's expected that the Boost.Test headers will be installed into `/usr/include/boost`. Override this with the `BOOST_INCLUDES` environment variable when running tests (see below).
 
