@@ -182,4 +182,11 @@ BOOST_AUTO_TEST_CASE(swap_function) {
     });
 }
 
-
+BOOST_AUTO_TEST_CASE(reduce_function) {
+    auto ll = create_ll(2);
+    auto initial_acc = make_shared<string>("");
+    string reduced_res = ll->reduce<string>("", [](size_t idx, const string& acc, int elt) {
+        return acc + to_string(idx) + to_string(elt);
+    });
+    BOOST_TEST("0011" == reduced_res);
+};

@@ -248,14 +248,15 @@ class LinkedList {
         }
 
         template <typename U>
-        U& reduce(const U& accum, reduce_fn<T, U> reducer) const {
+        U reduce(const U accum, reduce_fn<T, U> reducer) const {
             auto cur = this->head;
-            auto cur_accum = accum;
+            U ret = accum;
+            size_t i = 0;
             while(cur != NULL) {
-                cur_accum = reducer(cur_accum, cur->value);
+                ret = reducer(i++, ret, cur->val);
                 cur = cur->next;
             }
-            return cur_accum;
+            return ret;
         }
 };
 } // linkedlist
