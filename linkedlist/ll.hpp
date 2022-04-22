@@ -5,17 +5,11 @@
 #include <memory>
 #include <optional>
 
+#include "ll_funcs.hpp"
+#include "ll_transformers.hpp"
 #include "node.hpp"
 
 namespace linkedlist {
-template <typename T>
-using find_fn = std::function<bool(size_t, T)>;
-
-template <typename T>
-using for_each_fn = std::function<void(size_t, T)>;
-
-template <typename T, typename U>
-using map_fn = std::function<U(size_t, T)>;
 
 template <typename T>
 class LinkedList {
@@ -112,6 +106,21 @@ class LinkedList {
         // getters
         /////
         
+        // get returns the node at index idx, or nullopt if 
+        // no such node exists. this is an O(N) operation.
+        std::optional<T> get(size_t idx) const {
+            auto cur = this->head;
+            size_t i = 0;
+            while(NULL != cur) {
+                if (i == idx) {
+                    return std::make_optional<T>(cur->val);
+                }
+                cur = cur->next;
+                ++i;
+            }
+            return std::nullopt;
+        }
+
         // len returns the current length of the list
         size_t len() const {
             return this->size;
@@ -250,38 +259,20 @@ class LinkedList {
             }
         }
 
-        
-        
-        // get returns the node at index idx, or nullopt if 
-        // no such node exists. this is an O(N) operation.
-        // TODO: implement iterators for efficient range operations
-        std::optional<T> get(size_t idx) const {
-            auto cur = this->head;
-            size_t i = 0;
-            while(NULL != cur) {
-                if (i == idx) {
-                    return std::make_optional<T>(cur->val);
-                }
-                cur = cur->next;
-                ++i;
-            }
-            return std::nullopt;
-        }
-
         // find returns the first element whose value 
         // satisfies fn(index, value), or none if no
         // such element exists.
         std::optional<T> find(find_fn<T> fn) const {
-            auto cur = this->head;
-            size_t idx = 0;
-            while (cur != NULL) {
-                if (fn(idx, cur->val)) {
-                    return std::make_optional(cur->val);
-                }
-                cur = cur->next;
-                ++idx;
-            }
-            return std::nullopt;
+            return LinkedListTransformers<T>::find(fn, this->head);
+        }
+
+        template <typename U>
+        U& reduce(const U& accum, reduce_fn<T, U> reducer) const {
+            return LinkedListTransformers<T>::reduce(
+                accum,
+                reducer,
+                this->head
+            );
         }
 };
 } // linkedlist
