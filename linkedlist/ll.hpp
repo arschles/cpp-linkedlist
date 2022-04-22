@@ -247,6 +247,9 @@ class LinkedList {
             return std::nullopt;
         }
 
+        // reduce collapses the entire list into a single value.
+        // see reducer_fn documentation in ll_funcs.hpp for
+        // more detail.
         template <typename U>
         U reduce(const U& accum, reduce_fn<T, U> reducer) const {
             auto cur = this->head;
