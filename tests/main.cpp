@@ -86,6 +86,22 @@ BOOST_AUTO_TEST_CASE(map_function) {
     });
 }
 
+BOOST_AUTO_TEST_CASE(flatMap_function) {
+    auto ll = create_ll(4);
+    auto ret = ll->flatMap<int>([](size_t idx, int elt) {
+        // index 0 returns []
+        // index 1 returns [0]
+        // index 2 returns [0, 1]
+        // index 3 returns [0, 1, 2]
+        return create_ll(idx);
+    });
+    vector<int> expected({0, 0, 1, 0, 1, 2});
+    BOOST_TEST(ret->len() == expected.size());
+    ret->for_each([expected](size_t idx, const int& elt) {
+        BOOST_TEST(elt == expected.at(idx));
+    });
+}
+
 BOOST_AUTO_TEST_CASE(first_and_last_functions) {
     LinkedList<string> ll;
     BOOST_TEST(!ll.first().has_value());
@@ -152,13 +168,22 @@ BOOST_AUTO_TEST_CASE(copy_constructor) {
     ll1.append(4);
     auto ll2 = make_shared<LinkedList<int>>(ll1);
 
-    auto expected_elts = {1, 4};
-    auto expected = make_shared<vector<int>>(expected_elts);
+    vector<int> expected({1, 4});
 
     BOOST_TEST(ll1.len() == ll2->len());
-    BOOST_TEST(ll2->len() == expected->size());
+    BOOST_TEST(ll2->len() == expected.size());
     ll2->for_each([&expected](size_t idx, const int& elt) {
-        BOOST_TEST(elt == expected->at(idx));
+        BOOST_TEST(expected.at(idx) == elt);
+    });
+}
+
+BOOST_AUTO_TEST_CASE(append_function) {
+    auto ll1 = create_ll(2);
+    ll1->append(create_ll(4));
+    vector<int> expected({0, 1, 0, 1, 2, 3});
+    BOOST_TEST(ll1->len() == expected.size());
+    ll1->for_each([expected](size_t idx, const int& elt) {
+        BOOST_TEST(expected.at(idx) == elt);
     });
 }
 
@@ -201,22 +226,20 @@ BOOST_AUTO_TEST_CASE(zip_function) {
     });
     // zip ll1 with ll2
     {
-        auto expected_elts = {0, 1, 1, 2, 3};
-        auto expected = make_shared<vector<int>>(expected_elts);
+        vector<int> expected({0, 1, 1, 2, 3});
         auto zipped = ll1->zip(ll2);
-        BOOST_TEST(zipped->len() == expected->size());
+        BOOST_TEST(zipped->len() == expected.size());
         zipped->for_each([expected](size_t idx, int elt) {
-            BOOST_TEST(elt == expected->at(idx));
+            BOOST_TEST(expected.at(idx) == elt);
         });
     }
     // zip ll2 with ll1
     {
-        auto expected_elts = {1, 0, 2, 1, 3};
-        auto expected = make_shared<vector<int>>(expected_elts);
+        vector<int> expected({1, 0, 2, 1, 3});
         auto zipped = ll2->zip(ll1);
-        BOOST_TEST(zipped->len() == expected->size());
+        BOOST_TEST(zipped->len() == expected.size());
         zipped->for_each([expected](size_t idx, int elt) {
-            BOOST_TEST(elt == expected->at(idx));
+            BOOST_TEST(expected.at(idx) == elt);
         });
     }
 }

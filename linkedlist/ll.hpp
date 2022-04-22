@@ -99,6 +99,14 @@ class LinkedList {
             }
             this->size++;
         }
+
+        // appends adds all values in elts, in order, to
+        // the end of this
+        void append(const std::shared_ptr<LinkedList<T>> elts) {
+            elts->for_each([this](size_t idx, const T& val) {
+                this->append(val);
+            });
+        }
         
         /////
         // getters
@@ -208,16 +216,39 @@ class LinkedList {
         // it
         template <typename U>
         std::shared_ptr<LinkedList<U>> map(map_fn<T, U> fn) const {
-            auto new_list = std::make_shared<LinkedList<U>>();
+            // calling flatMap here is a few lines less code,
+            // but refactoring ends up being difficult because clang
+            // compile errors are prohibitive when you get something
+            // wrong. I'd rather use a little duplication and allow
+            // for code that is approximately as easy to read
+            // but much easier to refactor.
+            auto ret = std::make_shared<LinkedList<U>>();
             auto cur = this->head;
             size_t i = 0;
-            while (cur != NULL) {
-                auto new_val = fn(i, cur->val);
-                new_list->append(new_val);
+            while(cur != NULL) {
+                ret->append(fn(i++, cur->val));
                 cur = cur->next;
-                ++i;
             }
-            return new_list;
+            return ret;
+        }
+
+
+        // note that flat_map_fn should not go into ll_funcs.hpp 
+        // because it references LinkedList, and that would be a circular reference
+        template<typename U>
+        using flat_map_fn = std::function<std::shared_ptr<LinkedList<U>>(size_t, const T&)>;
+
+        template<typename U>
+        std::shared_ptr<LinkedList<U>> flatMap(flat_map_fn<U> fn) const {
+            auto ret = std::make_shared<LinkedList<U>>();
+            auto cur = this->head;
+            size_t i = 0;
+            while(cur != NULL) {
+                auto new_list = fn(i++, cur->val);
+                ret->append(new_list);
+                cur = cur->next;
+            }
+            return ret;
         }
 
         // for_each iterates through each element in this list and
