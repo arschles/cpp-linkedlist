@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <utility>
 
 #include "ll_funcs.hpp"
 #include "node.hpp"
@@ -277,7 +278,7 @@ class LinkedList {
 
         // filter returns a new list containing all elements
         // for which fn returned true
-        std::shared_ptr<LinkedList<T>> filter(find_fn<T> fn) {
+        std::shared_ptr<LinkedList<T>> filter(find_fn<T> fn) const {
             return this->flatMap<T>([fn](size_t idx, const T& val) {
                 auto ret = std::make_shared<LinkedList<T>>();
                 if (fn(idx, val)) {
@@ -285,6 +286,29 @@ class LinkedList {
                 }
                 return ret;
             });
+        }
+
+        // partition returns two lists. the first contains
+        // all the elements, in order, for which
+        // fn returned true. the second contains all
+        // elements, in order, for which fn returned
+        // false.
+        std::pair<
+            std::shared_ptr<LinkedList<T>>,
+            std::shared_ptr<LinkedList<T>>
+        > partition(
+            find_fn<T> fn
+        ) const {
+            auto list1 = std::make_shared<LinkedList<T>>();
+            auto list2 = std::make_shared<LinkedList<T>>();
+            this->forEach([fn, list1, list2](size_t idx, const T& val) {
+                if(fn(idx, val)) {
+                    list1->append(val);
+                } else {
+                    list2->append(val);
+                }
+            });
+            return std::make_pair(list1, list2);
         }
 
         // reduce collapses the entire list into a single value.

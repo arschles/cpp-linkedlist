@@ -82,6 +82,23 @@ BOOST_AUTO_TEST_CASE(filter_function) {
     });
 }
 
+BOOST_AUTO_TEST_CASE(partition_function) {
+    auto ll = create_ll(10);
+    auto partitioned = ll->partition([](size_t idx, int elt) {
+        return elt % 2 == 0;
+    });
+    vector<int> expected1({0, 2, 4, 6, 8});
+    vector<int> expected2({1, 3, 5, 7, 9});
+    BOOST_TEST(partitioned.first->len() == expected1.size());
+    BOOST_TEST(partitioned.second->len() == expected2.size());
+    partitioned.first->forEach([expected1](size_t idx, const int& elt) {
+        BOOST_TEST(expected1.at(idx) == elt);
+    });
+    partitioned.second->forEach([expected2](size_t idx, const int& elt) {
+        BOOST_TEST(expected2.at(idx) == elt);
+    });
+}
+
 BOOST_AUTO_TEST_CASE(map_function) {
     auto ll = create_ll(num_elts);
     auto mapped_ll = ll->map<string>([](size_t idx, int elt) {

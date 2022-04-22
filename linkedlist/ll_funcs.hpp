@@ -11,7 +11,7 @@ namespace linkedlist {
 // true if that element is considered "found"
 // and false otherwise.
 template <typename T>
-using find_fn = std::function<bool(size_t, T)>;
+using find_fn = std::function<bool(size_t, const T&)>;
 
 // for_each_fn is the type of the function used
 // in LinkedList<T>::for_each. The function is 
