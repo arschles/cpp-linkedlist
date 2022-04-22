@@ -46,7 +46,24 @@
         "typeinfo": "cpp",
         "cerrno": "cpp",
         "ios": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "list": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp",
+        "*.ipp": "cpp",
+        "strstream": "cpp",
+        "bitset": "cpp",
+        "chrono": "cpp",
+        "complex": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "ratio": "cpp",
+        "iomanip": "cpp",
+        "thread": "cpp",
+        "cfenv": "cpp",
+        "cinttypes": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     },
     "[cpp]": {
         "diffEditor.codeLens": true

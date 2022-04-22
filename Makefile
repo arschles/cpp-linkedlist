@@ -15,6 +15,6 @@ test:
 .PHONY: lint
 lint:
 	$(CLANG_TIDY_PREFIX) tests/*.cpp tests/*.hpp linkedlist/*.cpp linkedlist/*.hpp
-	# $(CPPCHECK_PREFIX) linkedlist tests
+	$(CPPCHECK_PREFIX) linkedlist tests
 		
 	

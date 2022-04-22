@@ -16,5 +16,8 @@ To run the tests, you need the following installed:
 
 - The `clang++` compiler capable of compiling to the C++17 standard (e.g. `-std=c++17`)
 - `make`
+- The [Boost.Test library](https://www.boost.org/doc/libs/1_79_0/libs/test/doc/html/index.html)
 
 Once you have these tools installed, run `make test` to execute the tests.
+
+>If the `Boost.Test` library headers are installed to somewhere other than `/usr/include/boost`, run `BOOST_INCLUDES=/path/to/boost make test`.

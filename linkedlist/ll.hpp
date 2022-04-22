@@ -5,7 +5,6 @@
 #include <memory>
 #include <optional>
 
-#include "ll_iter.hpp"
 #include "node.hpp"
 
 template <typename T>
@@ -109,12 +108,6 @@ class LinkedList {
                 return std::nullopt;
             }
             return std::make_optional(this->head->val);
-        }
-
-        // begin returns a standard C++ iterator that starts
-        // at the first element
-        LinkedListIterator<T> begin() {
-            return LinkedListIterator<T>(this->head);
         }
 
         // last returns the last element in the list
