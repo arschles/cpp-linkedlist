@@ -131,27 +131,35 @@ BOOST_AUTO_TEST_CASE(flatMap_function) {
     });
 }
 
-BOOST_AUTO_TEST_CASE(first_and_last_functions) {
+BOOST_AUTO_TEST_CASE(head_function) {
     LinkedList<string> ll;
-    BOOST_TEST(!ll.first().has_value());
-    BOOST_TEST(!ll.last().has_value());
+    BOOST_TEST(!ll.head().has_value());
     
     ll.append("abc");
-    BOOST_TEST(ll.first().has_value());
-    BOOST_TEST(ll.first().value() == "abc");
-    BOOST_TEST(ll.last().has_value());
-    BOOST_TEST(ll.last().value() == "abc");
+    BOOST_TEST(ll.head().has_value());
+    BOOST_TEST(ll.head().value() == "abc");
     
     ll.append("def");
-    BOOST_TEST(ll.first().has_value());
-    BOOST_TEST(ll.first().value() == "abc");
-    BOOST_TEST(ll.last().has_value());
-    BOOST_TEST(ll.last().value() == "def");
+    BOOST_TEST(ll.head().has_value());
+    BOOST_TEST(ll.head().value() == "abc");
     
     ll.pop();
     ll.pop();
-    BOOST_TEST(!ll.first().has_value());
-    BOOST_TEST(!ll.last().has_value());
+    BOOST_TEST(!ll.head().has_value());
+}
+
+BOOST_AUTO_TEST_CASE(tail_function) {
+    auto ll = create_ll(3);
+    auto tailOpt = ll->tail();
+    
+    BOOST_TEST(tailOpt.has_value());
+    auto tail = tailOpt.value();
+
+    vector<int> expected({1, 2});
+    BOOST_TEST(tail->len() == expected.size());
+    tail->forEach([expected](size_t idx, const int& elt) {
+        BOOST_TEST(expected.at(idx) == elt);
+    });
 }
 
 BOOST_AUTO_TEST_CASE(middle_function) {

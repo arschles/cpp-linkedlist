@@ -14,8 +14,8 @@ namespace linkedlist {
 template <typename T>
 class LinkedList {
     private:
-        Node<T> *head;
-        Node<T> *tail;
+        Node<T> *first;
+        Node<T> *last;
         size_t size;
     
     public:
@@ -23,16 +23,16 @@ class LinkedList {
         ///// 
         // constructors and destructor
         /////
-        LinkedList(): head(NULL), tail(NULL), size(0) {}
+        LinkedList(): first(NULL), last(NULL), size(0) {}
 
-        explicit LinkedList(const LinkedList<T>& other): head(NULL), tail(NULL), size(0) {
+        explicit LinkedList(const LinkedList<T>& other): first(NULL), last(NULL), size(0) {
             other.forEach([this](size_t idx, const T& val) {
                 this->append(val);
             });
         }
         
         ~LinkedList() {
-            auto cur = this->head;
+            auto cur = this->first;
             while (cur != NULL) {
                 auto next = cur->next;
                 delete cur;
@@ -48,7 +48,7 @@ class LinkedList {
                 return false;
             }
             
-            Node<T>* otherCur = other.head;
+            Node<T>* otherCur = other.first;
             // iterate each list item by item and compare
             // values. in the reduce, the accumulator starts
             // off as true. the first element in this that 
@@ -76,10 +76,10 @@ class LinkedList {
         // contents of this linked list before the call to swap.
         std::shared_ptr<LinkedList<T>> swap(const std::shared_ptr<LinkedList<T>> other) {
             auto ret = std::make_shared<LinkedList<T>>(*this);
-            this->head = NULL;
-            this->tail = NULL;
+            this->first = NULL;
+            this->last = NULL;
             this->size = 0;
-            Node<T>* otherNode = other->head;
+            Node<T>* otherNode = other->first;
             other->forEach([this](size_t idx, const T& val) {
                 this->append(val);
             });
@@ -91,12 +91,12 @@ class LinkedList {
         void append(const T& val) {
             auto node = new Node<T>(val);
 
-            if (this->head == NULL) {
-                this->head = node;
-                this->tail = node;
+            if (this->first == NULL) {
+                this->first = node;
+                this->last = node;
             } else {
-                this->tail->next = node;
-                this->tail = node;
+                this->last->next = node;
+                this->last = node;
             }
             this->size++;
         }
@@ -128,19 +128,10 @@ class LinkedList {
         
         // first returns the first element in the list
         // if there is one, or nullopt otherwise
-        std::optional<T> first() const {
+        std::optional<T> head() const {
             return this->find([](size_t idx, T val) {
                 return idx == 0;
             });
-        }
-
-        // last returns the last element in the list
-        // if there is one, or nullopt otherwise
-        std::optional<T> last() const {
-            if (this->tail == NULL) {
-                return std::nullopt;
-            }
-            return std::make_optional(this->tail->val);
         }
 
         // middle returns the value in the middle of the
@@ -156,28 +147,28 @@ class LinkedList {
         // pop removes the first element of the list
         // or returns nullopt if the list is empty
         std::optional<T> pop() {
-            // if there's no head, return nothing
-            if (this->head == NULL) {
+            // if there's no first, return nothing
+            if (this->first == NULL) {
                 return std::nullopt;
             }
 
-            auto curHead = this->head;
-            auto newHead = this->head->next;
-            if (newHead == NULL) {
-                // if the new head is null,
+            auto curFirst = this->first;
+            auto newFirst = this->first->next;
+            if (newFirst == NULL) {
+                // if the new first is null,
                 // set everything to null and 0
-                this->head = NULL;
-                this->tail = NULL;
+                this->first = NULL;
+                this->last = NULL;
                 this->size = 0;
             } else {
-                // otherwise, there is a new head
-                // so set the official head to 
-                // the new head and decrement the size
-                this->head = newHead;
+                // otherwise, there is a new first
+                // so set the official first to 
+                // the new first and decrement the size
+                this->first = newFirst;
                 this->size--;
             }
-            auto ret = curHead->val;
-            delete curHead;
+            auto ret = curFirst->val;
+            delete curFirst;
             return ret;
         }
 
@@ -192,20 +183,20 @@ class LinkedList {
             // node visited, we'll need to keep track of the
             // previous node so that we can set the
             // current node's next pointer to the previous
-            auto old_head = this->head;
-            auto cur = old_head;
+            auto oldFirst = this->first;
+            auto cur = oldFirst;
             Node<T> * prev = NULL;
             while (cur != NULL) {
-                auto old_next = cur->next;
+                auto oldNext = cur->next;
                 cur->next = prev;
                 prev = cur;
-                cur = old_next;
+                cur = oldNext;
             }
             // after we finish visiting all nodes,
             // the prev pointer will be pointing to the 
-            // new head of the list.
-            this->head = prev;
-            this->tail = old_head;
+            // new first of the list.
+            this->first = prev;
+            this->last = oldFirst;
         }
         
         /////
@@ -239,7 +230,7 @@ class LinkedList {
         template<typename U>
         std::shared_ptr<LinkedList<U>> flatMap(flat_map_fn<U> fn) const {
             auto ret = std::make_shared<LinkedList<U>>();
-            auto cur = this->head;
+            auto cur = this->first;
             size_t i = 0;
             while(cur != NULL) {
                 auto new_list = fn(i++, cur->val);
@@ -252,7 +243,7 @@ class LinkedList {
         // forEach iterates through each element in this list and
         // calls fn for each, sequentially and in order.
         void forEach(const for_each_fn<T>& fn) const {
-            auto cur = this->head;
+            auto cur = this->first;
             size_t i = 0;
             while(cur != NULL) {
                 fn(i++, cur->val);
@@ -264,7 +255,7 @@ class LinkedList {
         // satisfies fn(index, value), or none if no
         // such element exists.
         std::optional<T> find(find_fn<T> fn) const {
-            auto cur = head;
+            auto cur = this->first;
             size_t idx = 0;
             while (cur != NULL) {
                 if (fn(idx, cur->val)) {
@@ -311,12 +302,28 @@ class LinkedList {
             return std::make_pair(list1, list2);
         }
 
+        // tail returns a new list containing all elements
+        // except the head, if any elements exists. otherwise,
+        // returns nullopt
+        std::optional<std::shared_ptr<LinkedList<T>>> tail() {
+            if(this->first == NULL || this->first->next == NULL) {
+                return std::nullopt;
+            }
+            auto ret = std::make_shared<LinkedList<T>>();
+            auto cur = this->first->next;
+            while(cur != NULL) {
+                ret->append(cur->val);
+                cur = cur->next;
+            }
+            return ret;
+        }
+
         // reduce collapses the entire list into a single value.
         // see reducer_fn documentation in ll_funcs.hpp for
         // more detail.
         template <typename U>
         U reduce(const U& accum, reduce_fn<T, U> fn) const {
-            auto cur = this->head;
+            auto cur = this->first;
             U ret = accum;
             this->forEach([&ret, fn](size_t idx, const T& val) {
                 ret = fn(idx, ret, val);
@@ -339,8 +346,8 @@ class LinkedList {
             // ends up being shorter and slighly more straightforward
             // to read
             auto ret = std::make_shared<LinkedList<T>>();
-            auto thisCur = this->head;
-            auto otherCur = other->head;
+            auto thisCur = this->first;
+            auto otherCur = other->first;
             while((thisCur != NULL) || (otherCur != NULL)) {
                 if(thisCur != NULL) {
                     ret->append(thisCur->val);
