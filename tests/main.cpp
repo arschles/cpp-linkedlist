@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(basic_size_and_get) {
     auto ll = create_ll(num_elts);
     BOOST_TEST(ll->len() == num_elts);
     BOOST_TEST(!ll->get(ll->len()+1).has_value());
-    ll->for_each([](size_t idx, int elt) {
+    ll->for_each([](size_t idx, const int& elt) {
         BOOST_TEST(elt == idx);
     });
 }
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(reverse_function) {
     auto ll = create_ll(num_elts);
     ll->reverse();
     BOOST_TEST(ll->len() == num_elts);
-    ll->for_each([&](size_t idx, int elt) {
+    ll->for_each([&](size_t idx, const int& elt) {
         auto expected_val = num_elts - idx-1;
         BOOST_TEST(elt == expected_val);
     });
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(map_function) {
     // like "0", "1", "2", ... (note the strings, not
     // ints for each element).
     // iterate to check each element
-    mapped_ll->for_each([](size_t idx, string elt) {
+    mapped_ll->for_each([](size_t idx, const string& elt) {
         string expected = to_string(idx);
         BOOST_TEST(elt == to_string(idx));
     });
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(copy_constructor) {
 
     BOOST_TEST(ll1.len() == ll2->len());
     BOOST_TEST(ll2->len() == expected->size());
-    ll2->for_each([&expected](size_t idx, int elt) {
+    ll2->for_each([&expected](size_t idx, const int& elt) {
         BOOST_TEST(elt == expected->at(idx));
     });
 }
@@ -171,13 +171,13 @@ BOOST_AUTO_TEST_CASE(swap_function) {
     
     // ll1 now should have the elements of ll2
     BOOST_TEST(ll1->len() == num_elts*2);
-    ll1->for_each([](size_t idx, int elt) {
+    ll1->for_each([](size_t idx, const int& elt) {
         BOOST_TEST(elt == idx);
     });
 
     // ll2 now should have the elements of ll1
     BOOST_TEST(llswapped->len() == num_elts);
-    ll2->for_each([](size_t idx, int elt) {
+    ll2->for_each([](size_t idx, const int& elt) {
         BOOST_TEST(elt == idx);
     });
 }

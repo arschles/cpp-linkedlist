@@ -25,10 +25,9 @@ class LinkedList {
         LinkedList(): head(NULL), tail(NULL), size(0) {}
 
         explicit LinkedList(const LinkedList<T>& other): head(NULL), tail(NULL), size(0) {
-            for (size_t i = 0; i < other.size; ++i) {
-                auto otherVal = other.get(i).value();
-                this->append(otherVal);
-            }
+            other.for_each([this](size_t idx, const T& val) {
+                this->append(val);
+            });
         }
         
         ~LinkedList() {
@@ -79,7 +78,7 @@ class LinkedList {
             this->tail = NULL;
             this->size = 0;
             Node<T>* otherNode = other->head;
-            other->for_each([this](size_t idx, T val) {
+            other->for_each([this](size_t idx, const T& val) {
                 this->append(val);
             });
             

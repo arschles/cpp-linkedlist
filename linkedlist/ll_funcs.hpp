@@ -18,7 +18,7 @@ using find_fn = std::function<bool(size_t, T)>;
 // called in the same way as find_fn, but it
 // should not return any value.
 template <typename T>
-using for_each_fn = std::function<void(size_t, T)>;
+using for_each_fn = std::function<void(size_t, const T&)>;
 
 // map_fn is the type of the function used in
 // LinkedList<T>::map<U>. The function is called
