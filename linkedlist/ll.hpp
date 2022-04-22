@@ -25,7 +25,7 @@ class LinkedList {
         LinkedList(): head(NULL), tail(NULL), size(0) {}
 
         explicit LinkedList(const LinkedList<T>& other): head(NULL), tail(NULL), size(0) {
-            other.for_each([this](size_t idx, const T& val) {
+            other.forEach([this](size_t idx, const T& val) {
                 this->append(val);
             });
         }
@@ -79,7 +79,7 @@ class LinkedList {
             this->tail = NULL;
             this->size = 0;
             Node<T>* otherNode = other->head;
-            other->for_each([this](size_t idx, const T& val) {
+            other->forEach([this](size_t idx, const T& val) {
                 this->append(val);
             });
             
@@ -103,7 +103,7 @@ class LinkedList {
         // appends adds all values in elts, in order, to
         // the end of this
         void append(const std::shared_ptr<LinkedList<T>> elts) {
-            elts->for_each([this](size_t idx, const T& val) {
+            elts->forEach([this](size_t idx, const T& val) {
                 this->append(val);
             });
         }
@@ -223,7 +223,7 @@ class LinkedList {
             // for code that is approximately as easy to read
             // but much easier to refactor.
             auto ret = std::make_shared<LinkedList<U>>();
-            this->for_each([fn, ret](size_t idx, const T& val) {
+            this->forEach([fn, ret](size_t idx, const T& val) {
                 ret->append(fn(idx, val));
             });
             return ret;
@@ -248,9 +248,9 @@ class LinkedList {
             return ret;
         }
 
-        // for_each iterates through each element in this list and
+        // forEach iterates through each element in this list and
         // calls fn for each, sequentially and in order.
-        void for_each(const for_each_fn<T>& fn) const {
+        void forEach(const for_each_fn<T>& fn) const {
             auto cur = this->head;
             size_t i = 0;
             while(cur != NULL) {
@@ -275,6 +275,18 @@ class LinkedList {
             return std::nullopt;
         }
 
+        // filter returns a new list containing all elements
+        // for which fn returned true
+        std::shared_ptr<LinkedList<T>> filter(find_fn<T> fn) {
+            return this->flatMap<T>([fn](size_t idx, const T& val) {
+                auto ret = std::make_shared<LinkedList<T>>();
+                if (fn(idx, val)) {
+                    ret->append(val);
+                }
+                return ret;
+            });
+        }
+
         // reduce collapses the entire list into a single value.
         // see reducer_fn documentation in ll_funcs.hpp for
         // more detail.
@@ -282,7 +294,7 @@ class LinkedList {
         U reduce(const U& accum, reduce_fn<T, U> fn) const {
             auto cur = this->head;
             U ret = accum;
-            this->for_each([&ret, fn](size_t idx, const T& val) {
+            this->forEach([&ret, fn](size_t idx, const T& val) {
                 ret = fn(idx, ret, val);
             });
             return ret;

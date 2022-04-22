@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(basic_size_and_get) {
     auto ll = create_ll(num_elts);
     BOOST_TEST(ll->len() == num_elts);
     BOOST_TEST(!ll->get(ll->len()+1).has_value());
-    ll->for_each([](size_t idx, const int& elt) {
+    ll->forEach([](size_t idx, const int& elt) {
         BOOST_TEST(elt == idx);
     });
 }
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(reverse_function) {
     auto ll = create_ll(num_elts);
     ll->reverse();
     BOOST_TEST(ll->len() == num_elts);
-    ll->for_each([&](size_t idx, const int& elt) {
+    ll->forEach([&](size_t idx, const int& elt) {
         auto expected_val = num_elts - idx-1;
         BOOST_TEST(elt == expected_val);
     });
@@ -70,6 +70,18 @@ BOOST_AUTO_TEST_CASE(find_function) {
     }
 }
 
+BOOST_AUTO_TEST_CASE(filter_function) {
+    auto ll = create_ll(10);
+    auto filtered = ll->filter([](size_t idx, int elt) {
+        return elt % 2 == 0;
+    });
+    vector<int> expected({0, 2, 4, 6, 8});
+    BOOST_TEST(filtered->len() == expected.size());
+    filtered->forEach([expected](size_t idx, const int& elt) {
+        BOOST_TEST(expected.at(idx) == elt);
+    });
+}
+
 BOOST_AUTO_TEST_CASE(map_function) {
     auto ll = create_ll(num_elts);
     auto mapped_ll = ll->map<string>([](size_t idx, int elt) {
@@ -80,7 +92,7 @@ BOOST_AUTO_TEST_CASE(map_function) {
     // like "0", "1", "2", ... (note the strings, not
     // ints for each element).
     // iterate to check each element
-    mapped_ll->for_each([](size_t idx, const string& elt) {
+    mapped_ll->forEach([](size_t idx, const string& elt) {
         string expected = to_string(idx);
         BOOST_TEST(elt == to_string(idx));
     });
@@ -97,7 +109,7 @@ BOOST_AUTO_TEST_CASE(flatMap_function) {
     });
     vector<int> expected({0, 0, 1, 0, 1, 2});
     BOOST_TEST(ret->len() == expected.size());
-    ret->for_each([expected](size_t idx, const int& elt) {
+    ret->forEach([expected](size_t idx, const int& elt) {
         BOOST_TEST(elt == expected.at(idx));
     });
 }
@@ -172,7 +184,7 @@ BOOST_AUTO_TEST_CASE(copy_constructor) {
 
     BOOST_TEST(ll1.len() == ll2->len());
     BOOST_TEST(ll2->len() == expected.size());
-    ll2->for_each([&expected](size_t idx, const int& elt) {
+    ll2->forEach([&expected](size_t idx, const int& elt) {
         BOOST_TEST(expected.at(idx) == elt);
     });
 }
@@ -182,7 +194,7 @@ BOOST_AUTO_TEST_CASE(append_function) {
     ll1->append(create_ll(4));
     vector<int> expected({0, 1, 0, 1, 2, 3});
     BOOST_TEST(ll1->len() == expected.size());
-    ll1->for_each([expected](size_t idx, const int& elt) {
+    ll1->forEach([expected](size_t idx, const int& elt) {
         BOOST_TEST(expected.at(idx) == elt);
     });
 }
@@ -196,13 +208,13 @@ BOOST_AUTO_TEST_CASE(swap_function) {
     
     // ll1 now should have the elements of ll2
     BOOST_TEST(ll1->len() == num_elts*2);
-    ll1->for_each([](size_t idx, const int& elt) {
+    ll1->forEach([](size_t idx, const int& elt) {
         BOOST_TEST(elt == idx);
     });
 
     // ll2 now should have the elements of ll1
     BOOST_TEST(llswapped->len() == num_elts);
-    ll2->for_each([](size_t idx, const int& elt) {
+    ll2->forEach([](size_t idx, const int& elt) {
         BOOST_TEST(elt == idx);
     });
 }
@@ -229,7 +241,7 @@ BOOST_AUTO_TEST_CASE(zip_function) {
         vector<int> expected({0, 1, 1, 2, 3});
         auto zipped = ll1->zip(ll2);
         BOOST_TEST(zipped->len() == expected.size());
-        zipped->for_each([expected](size_t idx, int elt) {
+        zipped->forEach([expected](size_t idx, int elt) {
             BOOST_TEST(expected.at(idx) == elt);
         });
     }
@@ -238,7 +250,7 @@ BOOST_AUTO_TEST_CASE(zip_function) {
         vector<int> expected({1, 0, 2, 1, 3});
         auto zipped = ll2->zip(ll1);
         BOOST_TEST(zipped->len() == expected.size());
-        zipped->for_each([expected](size_t idx, int elt) {
+        zipped->forEach([expected](size_t idx, int elt) {
             BOOST_TEST(expected.at(idx) == elt);
         });
     }
