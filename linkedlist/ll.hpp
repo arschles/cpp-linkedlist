@@ -223,12 +223,9 @@ class LinkedList {
             // for code that is approximately as easy to read
             // but much easier to refactor.
             auto ret = std::make_shared<LinkedList<U>>();
-            auto cur = this->head;
-            size_t i = 0;
-            while(cur != NULL) {
-                ret->append(fn(i++, cur->val));
-                cur = cur->next;
-            }
+            this->for_each([fn, ret](size_t idx, const T& val) {
+                ret->append(fn(idx, val));
+            });
             return ret;
         }
 
@@ -282,14 +279,12 @@ class LinkedList {
         // see reducer_fn documentation in ll_funcs.hpp for
         // more detail.
         template <typename U>
-        U reduce(const U& accum, reduce_fn<T, U> reducer) const {
+        U reduce(const U& accum, reduce_fn<T, U> fn) const {
             auto cur = this->head;
             U ret = accum;
-            size_t i = 0;
-            while(cur != NULL) {
-                ret = reducer(i++, ret, cur->val);
-                cur = cur->next;
-            }
+            this->for_each([&ret, fn](size_t idx, const T& val) {
+                ret = fn(idx, ret, val);
+            });
             return ret;
         }
 
@@ -304,8 +299,9 @@ class LinkedList {
         // one continues without alternation after all elements
         // are exhausted in the shorter one.
         const std::shared_ptr<LinkedList<T>> zip(const std::shared_ptr<LinkedList<T>> other) const {
-            // this could use reduce or flatMap, but the code ends up being
-            // shorter with just a normal loop
+            // this could use reduce or flatMap, but this code
+            // ends up being shorter and slighly more straightforward
+            // to read
             auto ret = std::make_shared<LinkedList<T>>();
             auto thisCur = this->head;
             auto otherCur = other->head;
