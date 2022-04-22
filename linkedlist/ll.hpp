@@ -248,7 +248,7 @@ class LinkedList {
         }
 
         template <typename U>
-        U reduce(const U accum, reduce_fn<T, U> reducer) const {
+        U reduce(const U& accum, reduce_fn<T, U> reducer) const {
             auto cur = this->head;
             U ret = accum;
             size_t i = 0;
