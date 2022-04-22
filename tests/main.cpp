@@ -190,3 +190,33 @@ BOOST_AUTO_TEST_CASE(reduce_function) {
     });
     BOOST_TEST("0011" == reduced_res);
 };
+
+BOOST_AUTO_TEST_CASE(zip_function) {
+    // create 2 lists to zip
+    // first list is {0, 1}
+    auto ll1 = create_ll(2);
+    // second list after the map is {1, 2, 3}
+    auto ll2 = create_ll(3)->map<int>([](size_t idx, const int& elt) {
+        return idx + 1;
+    });
+    // zip ll1 with ll2
+    {
+        auto expected_elts = {0, 1, 1, 2, 3};
+        auto expected = make_shared<vector<int>>(expected_elts);
+        auto zipped = ll1->zip(ll2);
+        BOOST_TEST(zipped->len() == expected->size());
+        zipped->for_each([expected](size_t idx, int elt) {
+            BOOST_TEST(elt == expected->at(idx));
+        });
+    }
+    // zip ll2 with ll1
+    {
+        auto expected_elts = {1, 0, 2, 1, 3};
+        auto expected = make_shared<vector<int>>(expected_elts);
+        auto zipped = ll2->zip(ll1);
+        BOOST_TEST(zipped->len() == expected->size());
+        zipped->for_each([expected](size_t idx, int elt) {
+            BOOST_TEST(elt == expected->at(idx));
+        });
+    }
+}

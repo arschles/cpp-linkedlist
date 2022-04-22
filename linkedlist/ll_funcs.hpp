@@ -41,6 +41,6 @@ using map_fn = std::function<U(size_t, T)>;
 // 3. using the function's return value as the new
 // accumulator and returning to (2)
 template <typename T, typename U>
-using reduce_fn = std::function<U(size_t, const U, T)>;
+using reduce_fn = std::function<U(size_t, const U&, const T&)>;
 
 }// linkedlist

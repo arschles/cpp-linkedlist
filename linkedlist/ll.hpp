@@ -261,5 +261,34 @@ class LinkedList {
             }
             return ret;
         }
+
+        // zip returns a new linked list in wihch the elements of this
+        // and elements of other are alternated (like a zipper). In
+        // all alternations, elements from this list come first.
+        //
+        // for example, if this is [1, 2, 3] and other is [4, 5, 6, 7],
+        // the newly returned linked list is [1, 4, 2, 5, 3, 6, 7].
+        //
+        // Note that if the lists are not the same size, the longer
+        // one continues without alternation after all elements
+        // are exhausted in the shorter one.
+        const std::shared_ptr<LinkedList<T>> zip(const std::shared_ptr<LinkedList<T>> other) const {
+            // this could use reduce or flatMap, but the code ends up being
+            // shorter with just a normal loop
+            auto ret = std::make_shared<LinkedList<T>>();
+            auto thisCur = this->head;
+            auto otherCur = other->head;
+            while((thisCur != NULL) || (otherCur != NULL)) {
+                if(thisCur != NULL) {
+                    ret->append(thisCur->val);
+                    thisCur = thisCur->next;
+                }
+                if(otherCur != NULL) {
+                    ret->append(otherCur->val);
+                    otherCur = otherCur->next;
+                }
+            }
+            return ret;
+        };
 };
 } // linkedlist
