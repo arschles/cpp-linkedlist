@@ -47,18 +47,19 @@ class LinkedList {
                 return false;
             }
             
-            Node<T>* thisCur = this->head;
             Node<T>* otherCur = other.head;
             // iterate each list item by item and compare
-            // values
-            while (thisCur != NULL) {
-                if (thisCur->val != otherCur->val) {
-                    return false;
-                }
-                thisCur = thisCur->next;
+            // values. in the reduce, the accumulator starts
+            // off as true. the first element in this that 
+            // is not equal to other sets the accumulator
+            // to false, and it remains that for all
+            // subsequent elements.
+            return this->reduce<bool>(true, [&otherCur](size_t idx, const bool accum, T elt) {
+                auto otherVal = otherCur->val;
+                auto ret = accum && (elt == otherVal);
                 otherCur = otherCur->next;
-            }
-            return true;
+                return ret;
+            });
         };
 
         bool operator!=(const LinkedList<T>& other) const {
