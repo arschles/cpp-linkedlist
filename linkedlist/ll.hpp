@@ -6,7 +6,6 @@
 #include <optional>
 
 #include "ll_funcs.hpp"
-#include "ll_transformers.hpp"
 #include "node.hpp"
 
 namespace linkedlist {
@@ -75,15 +74,14 @@ class LinkedList {
         // previous contents of this one. the returned value will be a copy of the 
         // contents of this linked list before the call to swap.
         std::shared_ptr<LinkedList<T>> swap(const std::shared_ptr<LinkedList<T>> other) {
-            auto ret = std::shared_ptr<LinkedList<T>>(new LinkedList<T>(*this));
+            auto ret = std::make_shared<LinkedList<T>>(*this);
             this->head = NULL;
             this->tail = NULL;
             this->size = 0;
             Node<T>* otherNode = other->head;
-            while(otherNode != NULL) {
-                this->append(otherNode->val);
-                otherNode = otherNode->next;
-            }
+            other->for_each([this](size_t idx, T val) {
+                this->append(val);
+            });
             
             return ret;
         }
@@ -263,16 +261,27 @@ class LinkedList {
         // satisfies fn(index, value), or none if no
         // such element exists.
         std::optional<T> find(find_fn<T> fn) const {
-            return LinkedListTransformers<T>::find(fn, this->head);
+            auto cur = head;
+            size_t idx = 0;
+            while (cur != NULL) {
+                if (fn(idx, cur->val)) {
+                    return std::make_optional(cur->val);
+                }
+                cur = cur->next;
+                ++idx;
+            }
+            return std::nullopt;
         }
 
         template <typename U>
         U& reduce(const U& accum, reduce_fn<T, U> reducer) const {
-            return LinkedListTransformers<T>::reduce(
-                accum,
-                reducer,
-                this->head
-            );
+            auto cur = this->head;
+            auto cur_accum = accum;
+            while(cur != NULL) {
+                cur_accum = reducer(cur_accum, cur->value);
+                cur = cur->next;
+            }
+            return cur_accum;
         }
 };
 } // linkedlist

@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(swap_function) {
     auto ll2 = create_ll(num_elts*2);
     // after the swap call, ll1, should have 1 element in it
     // and ll2 should have num_elts
-    ll2 = ll1->swap(ll2);
+    auto llswapped = ll1->swap(ll2);
     
     // ll1 now should have the elements of ll2
     BOOST_TEST(ll1->len() == num_elts*2);
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(swap_function) {
     });
 
     // ll2 now should have the elements of ll1
-    BOOST_TEST(ll2->len() == num_elts);
+    BOOST_TEST(llswapped->len() == num_elts);
     ll2->for_each([](size_t idx, int elt) {
         BOOST_TEST(elt == idx);
     });
