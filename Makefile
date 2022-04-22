@@ -7,10 +7,6 @@ CLANG_TIDY_PREFIX=clang-tidy \
 CPPCHECK_PREFIX=cppcheck --std=c++17 --enable=all --includes-file=linkedlist
 BOOST_INCLUDES?=/usr/include/boost
 
-.PHONY: build-ll
-build-ll:
-	clang++ -Ilinkedlist -std=c++17 -o ./bin/linkedlist linkedlist/*.cpp
-
 .PHONY: test
 test:
 	clang++ -Ilinkedlist -I${BOOST_INCLUDES} -std=c++17 -o ./bin/ll-tests tests/*.cpp
