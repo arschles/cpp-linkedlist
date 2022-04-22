@@ -1,8 +1,14 @@
 # C++ Linked List Implementation
 
-This repository contains C++ linked list implementation, simple test harness, and a suite of unit tests.
+This repository contains C++ linked list implementation, simple test harness, and a suite of unit tests. All linked list sources are header-only and located in [`./linkedlist`](./linkedlist), and the test harness and tests are located in [`./tests`](./tests).
 
-The only dependencies herein are on the C++ standard library (C++17 standard), excluding all functionality from the standard containers.
+All sources in [`./linkedlist`](./linkedlist) have dependencies only on non-container libraries from the C++17 standard library. Tests have the following dependencies:
+
+- All code in [`./linkedlist`](./linkedlist).
+- The C++17 standard library, including containers.
+- The Boost.Test library:
+  - If on Ubuntu, install with this command: `sudo apt-get install libboost-all-dev`.
+  - It's expected that the Boost.Test headers will be installed into `/usr/include/boost`. Override this with the `BOOST_INCLUDES` environment variable when running tests (see below).
 
 ## Running Tests
 

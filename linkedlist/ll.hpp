@@ -1,11 +1,21 @@
 #pragma once
 
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <optional>
 
 #include "ll_iter.hpp"
 #include "node.hpp"
+
+template <typename T>
+using find_fn = std::function<bool(size_t, T)>;
+
+template <typename T>
+using for_each_fn = std::function<void(size_t, T)>;
+
+template <typename T, typename U>
+using map_fn = std::function<U(size_t, T)>;
 
 template <typename T>
 class LinkedList {
@@ -15,11 +25,6 @@ class LinkedList {
         size_t size;
     
     public:
-        using find_fn = std::function<bool(size_t, T)>;
-        template <typename U>
-        using map_fn = std::function<U(size_t, T)>;
-
-
         LinkedList(): head(NULL), tail(NULL), size(0) {}
 
         explicit LinkedList(const LinkedList<T>& other): head(NULL), tail(NULL), size(0) {
@@ -38,7 +43,7 @@ class LinkedList {
             }
         }
 
-        bool operator==(const LinkedList<T>& other) {
+        bool operator==(const LinkedList<T>& other) const {
             if (this->size != other.size) {
                 return false;
             }
@@ -57,7 +62,7 @@ class LinkedList {
             return true;
         };
 
-        bool operator!=(const LinkedList<T>& other) {
+        bool operator!=(const LinkedList<T>& other) const {
             return !(*this==other);
         };
 
@@ -121,8 +126,6 @@ class LinkedList {
             return std::make_optional(this->tail->val);
         }
 
-
-
         // middle returns the value in the middle of the
         // list. if no items exist in the list, returns
         // nullopt. if the list has an odd number of 
@@ -150,8 +153,11 @@ class LinkedList {
             return std::make_optional(one->val);
         }
         
+        // map iterates this list, applies fn to each element in the
+        // list, constructs a new list with the results and returns
+        // it
         template <typename U>
-        std::shared_ptr<LinkedList<U>> map(map_fn<U> fn) const {
+        std::shared_ptr<LinkedList<U>> map(map_fn<T, U> fn) const {
             auto new_list = std::make_shared<LinkedList<U>>();
             auto cur = this->head;
             size_t i = 0;
@@ -159,8 +165,21 @@ class LinkedList {
                 auto new_val = fn(i, cur->val);
                 new_list->append(new_val);
                 cur = cur->next;
+                ++i;
             }
             return new_list;
+        }
+
+        // for_each iterates through each element in this list and
+        // calls fn for each, sequentially and in order.
+        void for_each(for_each_fn<T> fn) const {
+            auto cur = this->head;
+            size_t i = 0;
+            while(cur != NULL) {
+                fn(i, cur->val);
+                ++i;
+                cur = cur->next;
+            }
         }
 
         // pop removes the first element of the list
@@ -237,7 +256,7 @@ class LinkedList {
         // find returns the first element whose value 
         // satisfies fn(index, value), or none if no
         // such element exists.
-        std::optional<T> find(find_fn fn) const {
+        std::optional<T> find(find_fn<T> fn) const {
             auto cur = this->head;
             size_t idx = 0;
             while (cur != NULL) {

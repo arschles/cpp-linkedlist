@@ -30,6 +30,10 @@ class LinkedListIterator {
             );
         }
 
+        T operator*() {
+            return this->cur->val;
+        }
+
         bool operator!=(const LinkedListIterator<T>& other) {
             return !(*this == other);
         }
