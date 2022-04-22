@@ -134,6 +134,22 @@ class LinkedList {
             });
         }
 
+        // tail returns a new list containing all elements
+        // except the head, if any elements exists. otherwise,
+        // returns nullopt
+        std::optional<std::shared_ptr<LinkedList<T>>> tail() const {
+            if(this->first == NULL || this->first->next == NULL) {
+                return std::nullopt;
+            }
+            auto ret = std::make_shared<LinkedList<T>>();
+            auto cur = this->first->next;
+            while(cur != NULL) {
+                ret->append(cur->val);
+                cur = cur->next;
+            }
+            return ret;
+        }
+
         // middle returns the value in the middle of the
         // list. if no items exist in the list, returns
         // nullopt. if the list has an odd number of 
@@ -300,22 +316,6 @@ class LinkedList {
                 }
             });
             return std::make_pair(list1, list2);
-        }
-
-        // tail returns a new list containing all elements
-        // except the head, if any elements exists. otherwise,
-        // returns nullopt
-        std::optional<std::shared_ptr<LinkedList<T>>> tail() {
-            if(this->first == NULL || this->first->next == NULL) {
-                return std::nullopt;
-            }
-            auto ret = std::make_shared<LinkedList<T>>();
-            auto cur = this->first->next;
-            while(cur != NULL) {
-                ret->append(cur->val);
-                cur = cur->next;
-            }
-            return ret;
         }
 
         // reduce collapses the entire list into a single value.
