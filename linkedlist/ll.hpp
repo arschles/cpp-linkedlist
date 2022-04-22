@@ -147,7 +147,7 @@ class LinkedList {
                 ret->append(cur->val);
                 cur = cur->next;
             }
-            return ret;
+            return std::make_optional(ret);
         }
 
         // middle returns the value in the middle of the
