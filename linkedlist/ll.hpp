@@ -107,16 +107,9 @@ class LinkedList {
         // get returns the node at index idx, or nullopt if 
         // no such node exists. this is an O(N) operation.
         std::optional<T> get(size_t idx) const {
-            auto cur = this->head;
-            size_t i = 0;
-            while(NULL != cur) {
-                if (i == idx) {
-                    return std::make_optional<T>(cur->val);
-                }
-                cur = cur->next;
-                ++i;
-            }
-            return std::nullopt;
+            return this->find([idx] (size_t this_idx, T val) {
+                return idx == this_idx;
+            });
         }
 
         // len returns the current length of the list
@@ -127,10 +120,9 @@ class LinkedList {
         // first returns the first element in the list
         // if there is one, or nullopt otherwise
         std::optional<T> first() const {
-            if (this->head == NULL) {
-                return std::nullopt;
-            }
-            return std::make_optional(this->head->val);
+            return this->find([](size_t idx, T val) {
+                return idx == 0;
+            });
         }
 
         // last returns the last element in the list
@@ -148,25 +140,8 @@ class LinkedList {
         // items in it, middle returns the item closer
         // to the end of the list
         std::optional<T> middle() const {
-            if(this->head == NULL) {
-                // if there's no head, there's no middle
-                return std::nullopt;
-            }
-
-            // to find the middle, keep one pointer that advances
-            // one node at a time, and the other that advances
-            // two at a time. when the second pointer hits the
-            // end, the first pointer will be in the middle.
-            auto one = this->head, two=one;
-            while(two->next != NULL) {
-                one = one->next;
-                two = two->next->next;
-                if (two == NULL) {
-                    break;
-                }
-            }
-
-            return std::make_optional(one->val);
+            const size_t mid_idx = this->size / 2;
+            return this->get(mid_idx);
         }
 
         // pop removes the first element of the list
@@ -247,12 +222,11 @@ class LinkedList {
 
         // for_each iterates through each element in this list and
         // calls fn for each, sequentially and in order.
-        void for_each(for_each_fn<T> fn) const {
+        void for_each(const for_each_fn<T>& fn) const {
             auto cur = this->head;
             size_t i = 0;
             while(cur != NULL) {
-                fn(i, cur->val);
-                ++i;
+                fn(i++, cur->val);
                 cur = cur->next;
             }
         }
