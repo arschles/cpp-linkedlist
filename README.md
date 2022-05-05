@@ -2,7 +2,7 @@
 
 This repository contains C++ linked list implementation, simple test harness, and a suite of unit tests. All linked list sources are header-only and located in [`./linkedlist`](./linkedlist), and the test harness and tests are located in [`./tests`](./tests).
 
-All sources in [`./linkedlist`](./linkedlist) have dependencies only on non-container libraries from the C++17 standard library. Tests have the following dependencies:
+Sources in [`./linkedlist`](./linkedlist) represent "production" code. It has dependencies only on non-container libraries from the C++17 standard library. Sources in [`./tests`](./tests) represent test code, and is not intended for use by clients of the library. Tests have the following dependencies:
 
 - All code in [`./linkedlist`](./linkedlist).
 - The C++17 standard library, including containers.
